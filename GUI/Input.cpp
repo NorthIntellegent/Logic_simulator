@@ -13,6 +13,27 @@ void Input::GetPointClicked(int &x, int &y)
 
 string Input::GetSrting(Output *pOut)
 {
+
+	string input;
+	char c;
+
+	while (true)
+	{
+		keytype t = pWind->GetKeyPress(c);
+		if (t == 27)
+			return "";
+		else if (t == 13)
+			return input;
+		else if (t == 8)
+			if (input == "")
+				continue;
+			else
+				input.pop_back();
+		else
+			input.push_back(c);
+
+		pOut->PrintMsg(input);
+	}
 	///TODO: Implement this Function
 	//Read a complete string from the user until the user presses "ENTER".
 	//If the user presses "ESCAPE". This function should return an empty string.
