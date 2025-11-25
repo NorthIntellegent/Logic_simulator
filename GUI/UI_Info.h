@@ -17,7 +17,7 @@ struct UI_Info	//User Interface Info.
 	static const int	width = 1500, height = 1000,	//Window width and height
 						wx = 15 , wy = 15,			//Window starting coordinates
 						StatusBarHeight = 50,	//Status Bar Height
-						ToolBarHeight = 60,      //Tool Bar Height (distance from top of window to bottom line of toolbar)
+						ToolBarHeight =70 ,      //Tool Bar Height (distance from top of window to bottom line of toolbar)
 						ToolItemWidth = 60;		//Width of each item in toolbar menu
 
 	color DrawColor;		//Drawing color

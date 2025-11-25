@@ -66,9 +66,20 @@ enum DsgnMenuItem //The items of the design menu (you should add more items)
 {
 	//Note: Items are ordered here as they appear in menu
 	//If you want to change the menu items order, change the order here
-	ITM_AND2,		//AND gate item in menu
+	ITM_AND2,//AND gate item in menu
+	AND3,
 	ITM_OR2,		//OR gate item in menu
 	NAND,
+	NOR,
+	NOR3,
+	XOR,
+	XOR3,
+	XNOR,
+	BUF,
+	INV,
+	SWT,
+	BLB,
+	
 
 
 
