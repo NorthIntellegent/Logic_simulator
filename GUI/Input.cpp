@@ -64,6 +64,17 @@ ActionType Input::GetUserAction() const
 			{
 			case ITM_AND2: return ADD_AND_GATE_2;
 			case ITM_OR2: return ADD_OR_GATE_2;
+			case AND3: return ADD_AND_GATE_3;
+			case NAND: return ADD_NAND_GATE_2;
+			case NOR: return ADD_NOR_GATE_2;
+			case NOR3: return ADD_NOR_GATE_3;
+			case XOR: return ADD_XOR_GATE_2;
+			case XOR3: return 	ADD_XOR_GATE_3;		//Add 3-input XOR gate
+			case XNOR: return ADD_XNOR_GATE_2;
+			case BUF: return ADD_Buff;
+			case INV: return ADD_INV;
+			case SWT: return ADD_Switch;
+			case BLB: return ADD_LED;
 			case ITM_EXIT: return EXIT;	
 			
 			default: return DSN_TOOL;	//A click on empty place in desgin toolbar
