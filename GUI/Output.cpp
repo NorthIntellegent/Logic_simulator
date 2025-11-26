@@ -150,9 +150,9 @@ void Output::DrawAND2(GraphicsInfo r_GfxInfo, bool selected) const
 {
 	string GateImage;
 	if(selected)	//use image in the highlighted case
-		GateImage="Images\\Gates\\Gate_AND2_Hi.jpg";
+		GateImage="Images\\Gates\\AND2_hi.jpg";
 	else  
-		GateImage = "Images\\Gates\\Gate_AND2.jpg";
+		GateImage = "Images\\Gates\\AND2.jpg";
 
 	//Draw AND2 Gate at Gfx_Info (1st corner)
 	//Set the Image Width & Height by AND2 Image Parameter in UI_Info
@@ -165,6 +165,9 @@ void Output::DrawAND2(GraphicsInfo r_GfxInfo, bool selected) const
 void Output::DrawConnection(GraphicsInfo r_GfxInfo, bool selected) const
 {
 	//TODO: Add code to draw connection
+	if (selected) {
+		pWind->DrawLine(r_GfxInfo.x1, r_GfxInfo.y1, r_GfxInfo.x2, r_GfxInfo.y2);
+	}
 }
 
 
