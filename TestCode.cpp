@@ -1,12 +1,14 @@
 #include "GUI\Input.h"
 #include "GUI\Output.h"
+#include <iostream>
 
 //This is a test code to test the Input and Output classes
 
 int main()
 {
-	int x,y;
 
+	int x, y;
+	window* pWind;
 	//Create Input and Output objects to test
 	Output *pOut = new Output();;
 	Input *pIn = pOut->CreateInput();
@@ -15,12 +17,26 @@ int main()
 	pOut->PrintMsg("This demo is to test input and output classes, Click anywhere to start the test");
 	pIn->GetPointClicked(x,y);	//Wait for any click
 
-
+	pIn->GetPointClicked(x, y);	//Wait for any click
+	cout << x<< endl;
+	cout << y<<endl;
+	//x 786
+	//y 55  left down 
+	// x 832
+	//y 58 right down 
+	// x 786
+	//y 10 left up 
+	// x 834
+	//y 12 right up 
+	// 
 	///////////////////////////////////////////////////////////////////////////////////
 	// TEST 1:	Create The FULL Tool bar, the drawing area and the status bar	
 	//			This has already been done through the constrcutor of class Output
 	///////////////////////////////////////////////////////////////////////////////////
 
+	pIn->GetPointClicked(x, y);
+	pOut->SimulationMode(*pOut);
+	
 	pOut->PrintMsg("TEST1: Drawing Tool bar and Status bar, Click anywhere to continue");
 	pIn->GetPointClicked(x,y);	//Wait for any click
 
@@ -61,6 +77,7 @@ int main()
 	pOut->DrawNAND2(GfxInfo, true);
 
 	pIn->GetPointClicked(x,y);	//Wait for any click
+	
 	pOut->ClearDrawingArea();
 
 	/// 2.3- OR2 and NOR2 Gates test
@@ -286,5 +303,6 @@ int main()
 	delete pOut;	
 	return 0;
 }
+
 
 

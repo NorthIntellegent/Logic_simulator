@@ -79,6 +79,7 @@ enum DsgnMenuItem //The items of the design menu (you should add more items)
 	INV,
 	SWT,
 	BLB,
+	S,
 	
 
 
@@ -97,7 +98,9 @@ enum SimMenuItem //The items of the simulation menu (you should add more items)
 	//Note: Items are ordered here as they appear in menu
 	ITM_SIM,	//Simulate menu item
 	ITM_TRUTH,	//Truth table menu item
-	
+	CHK,
+	CRCK,
+	BAK,
 	//TODO:Add more items names here
 	
 	ITM_SIM_CNT		//no. of simulation menu items ==> This should be the last line in this enum

@@ -1,7 +1,9 @@
 #include "Output.h"
 
+
 Output::Output()
 {
+	
 	//Initialize user interface parameters
 
 	UI.AppMode = DESIGN;	//Design Mode is the startup mode
@@ -58,7 +60,7 @@ void Output::PrintMsg(string msg) const
 	// Set the Message offset from the Status Bar
 	int MsgX = 25;
 	int MsgY = UI.StatusBarHeight - 10;
-
+	
 	// Print the Message
     pWind->SetFont(20, BOLD | ITALICIZED, BY_NAME, "Arial"); 
 	pWind->SetPen(UI.MsgColor); 
@@ -76,6 +78,18 @@ void Output::ClearStatusBar()const
 	pWind->SetBrush(UI.BkGrndColor);
 	pWind->DrawRectangle(MsgX, UI.height - MsgY, UI.width, UI.height);
 }
+
+void Output::ClearDesignToolBar() 
+{
+	// Draw a rectangle over the toolbar area with the background color
+	pWind->SetBrush(UI.BkGrndColor);
+	pWind->SetPen(UI.BkGrndColor, 1);
+
+	pWind->DrawRectangle(0, 0, UI.width, UI.ToolBarHeight);
+}
+
+
+
 //////////////////////////////////////////////////////////////////////////////////////////
 //Clears the drawing (design) area
 void Output::ClearDrawingArea() const
@@ -110,6 +124,7 @@ void Output::CreateDesignToolBar() const
 	MenuItemImages[SWT] = "images\\Menu\\SWT.jpg";
 	MenuItemImages[BLB] = "images\\Menu\\BLB.jpg";
 	MenuItemImages[ITM_EXIT] = "images\\Menu\\Menu_Exit.jpg";
+	MenuItemImages[S] = "images\\Menu\\S.jpg";
 
 	//TODO: Prepare image for each menu item and add it to the list
 
@@ -133,14 +148,54 @@ void Output::CreateDesignToolBar() const
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 //Draws the menu (toolbar) in the simulation mode
+
+void Output::SimulationMode(Output &out)
+{
+	Input* pIn = out.CreateInput();
+
+	int x, y;
+	pIn->GetPointClicked(x, y);
+
+	if ((x > 786 && x < 834) && (y > 10 && y < 58))
+	{
+		out.ClearDesignToolBar();
+		out.ClearDrawingArea();
+		out.CreateSimulationToolBar();
+	}
+}
+
+
+
+
 void Output::CreateSimulationToolBar() const
 {
 	UI.AppMode = SIMULATION;	//Simulation Mode
 
 	//TODO: Write code to draw the simualtion toolbar (similar to that of design toolbar drawing)
+	string MenuItemImages[ITM_SIM_CNT]; 
+	MenuItemImages[CHK] = "images\\Menu\\CHK.jpg";
+	MenuItemImages[ITM_TRUTH] = "images\\Menu\\ITM_TRUTH.jpg";
+	MenuItemImages[ITM_SIM] = "images\\Menu\\ITM_SIM.jpg";
+	MenuItemImages[CRCK] = "images\\Menu\\CRCK.jpg";
+	MenuItemImages[BAK] = "images\\Menu\\BAK.jpg";
+	int iconW = UI.AND2_Width;
+	int iconH = UI.AND2_Height;
 
+	for (int i = 0; i < ITM_SIM_CNT; ++i)
+	{
+		int slotX = i * UI.ToolItemWidth;
+		int drawX = slotX + (UI.ToolItemWidth - iconW) / 2;   // center in slot
+		int drawY = (UI.ToolBarHeight - iconH) / 2;           // center vertically
+		pWind->DrawImage(MenuItemImages[i], drawX, drawY, iconW, iconH);
+	}
+
+
+	//Draw a line under the toolbar
+	pWind->SetPen(BLUE, 2);
+	pWind->DrawLine(0, UI.ToolBarHeight, UI.width, UI.ToolBarHeight);
 
 }
+
 
 //======================================================================================//
 //								Components Drawing Functions							//
