@@ -175,15 +175,16 @@ int main()
 	
 
 	///TODO: Add code to draw connections, Normal, Highlighted, straight, and broken (all combinations) 
-	/*GfxInfo.x1 = 100;	GfxInfo.y1 = 100;
-	pOut->DrawConnection(GfxInfo);*/
+	GfxInfo.x1 = 100;	GfxInfo.y1 = 300;
+	GfxInfo.x2 = 500;	GfxInfo.y2 = 500;
+	pOut->DrawConnection(GfxInfo);
+
+	GfxInfo.x1 = 600;	GfxInfo.y1 = 300;
+	GfxInfo.x2 = 800;	GfxInfo.y2 = 500;
+	pOut->DrawConnection(GfxInfo, true);
 
 	pIn->GetPointClicked(x,y);	//Wait for any click
 	pOut->ClearDrawingArea();
-
-
-
-	
 
 
 	///////////////////////////////////////////////////////////////////////////////////
