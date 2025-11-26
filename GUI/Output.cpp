@@ -374,16 +374,19 @@ void Output::DrawLED(GraphicsInfo r_GfxInfo, bool selected) const
 
 void Output::DrawConnection(GraphicsInfo r_GfxInfo, bool selected) const
 {
-	//TODO: Add code to draw connection
+
 	if (selected) {
-		pWind->DrawLine(r_GfxInfo.x1, r_GfxInfo.y1, 200, 20);
+		pWind->SetPen(RED);
 	}
-	else {
-		pWind->DrawLine(r_GfxInfo.x1, r_GfxInfo.y1, 200, 20);
-	}
+
+	//TODO: Add code to draw connection
+	int half = (r_GfxInfo.x2 - r_GfxInfo.x1) / 2;
+	pWind->DrawLine(r_GfxInfo.x1, r_GfxInfo.y1, r_GfxInfo.x1 + half, r_GfxInfo.y1);
+	pWind->DrawLine(r_GfxInfo.x1 + half, r_GfxInfo.y1, r_GfxInfo.x1 + half, r_GfxInfo.y2);
+	pWind->DrawLine(r_GfxInfo.x1 + half, r_GfxInfo.y2, r_GfxInfo.x1 + half + half, r_GfxInfo.y2);
 }
 
-
+ 
 Output::~Output()
 {
 	delete pWind;
