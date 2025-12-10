@@ -1,5 +1,7 @@
 //#include "Input.h"
 #include "Output.h"
+#include <iostream>
+#include "..\Defs.h"
 
 Input::Input(window* pW)
 {
@@ -9,38 +11,34 @@ Input::Input(window* pW)
 void Input::GetPointClicked(int &x, int &y)
 {
 	pWind->WaitMouseClick(x, y);	//Wait for mouse click
+	cout << "GetPointClicked: (" << x << ", " << y << ")" << endl;
 }
 
-string Input::GetSrting(Output *pOut)
+string Input::GetString(Output *pOut)
 {
-
-	string input;
+	string input = "";
 	char c;
 
 	while (true)
 	{
 		keytype t = pWind->GetKeyPress(c);
-		if (t == 27)
-			return "";
-		else if (t == 13)
-			return input;
-		else if (t == 8)
-			if (input == "")
-				continue;
+		if (t == ASCII)
+		{
+			if (c == 13) // Enter
+				return input;
+			else if (c == 8) // Backspace
+			{
+				if (input.length() > 0)
+					input.pop_back();
+			}
+			else if (c == 27) // Escape
+				return "";
 			else
-				input.pop_back();
-		else
-			input.push_back(c);
-
-		pOut->PrintMsg(input);
+				input += c;
+			
+			pOut->PrintMsg(input);
+		}
 	}
-	///TODO: Implement this Function
-	//Read a complete string from the user until the user presses "ENTER".
-	//If the user presses "ESCAPE". This function should return an empty string.
-	//"BACKSPACE" should be also supported
-	//User should see what he is typing at the status bar
-
-	return NULL;
 }
 
 //This function reads the position where the user clicks to determine the desired action
@@ -75,6 +73,13 @@ ActionType Input::GetUserAction() const
 			case INV: return ADD_INV;
 			case SWT: return ADD_Switch;
 			case BLB: return ADD_LED;
+			
+			case ITM_LABEL: return ADD_Label;
+			case ITM_EDIT: return EDIT_Label;
+			case ITM_DELETE: return DEL;
+			case ITM_SAVE: return SAVE;
+			case ITM_LOAD: return LOAD;
+
 			case ITM_EXIT: return EXIT;	
 			
 			default: return DSN_TOOL;	//A click on empty place in desgin toolbar

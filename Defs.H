@@ -79,11 +79,12 @@ enum DsgnMenuItem //The items of the design menu (you should add more items)
 	INV,
 	SWT,
 	BLB,
-	S,
 	
-
-
-
+	ITM_LABEL,
+	ITM_EDIT,
+	ITM_DELETE,
+	ITM_SAVE,
+	ITM_LOAD,
 
 	ITM_EXIT,		//Exit item
 	//TODO: Add more items names here

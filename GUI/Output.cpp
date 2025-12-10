@@ -1,5 +1,5 @@
 #include "Output.h"
-
+#include "..\Defs.h"
 
 Output::Output()
 {
@@ -50,8 +50,15 @@ void Output::ChangeTitle(string Title) const
 //////////////////////////////////////////////////////////////////////////////////
 void Output::CreateStatusBar() const
 {
-	pWind->SetPen(RED,3);
-	pWind->DrawLine(0, UI.height-UI.StatusBarHeight, UI.width, UI.height-UI.StatusBarHeight);
+	pWind->SetPen(RED, 3);
+	//pWind->DrawLine(0, UI.height - UI.StatusBarHeight, UI.width, UI.height - UI.StatusBarHeight);
+
+	//Draw a rectangle for the status bar
+	pWind->SetBrush(UI.BkGrndColor); // Or use a different color like LIGHTGRAY
+	pWind->DrawRectangle(0, UI.height - UI.StatusBarHeight, UI.width, UI.height);
+
+	//Draw the separator line
+	pWind->DrawLine(0, UI.height - UI.StatusBarHeight, UI.width, UI.height - UI.StatusBarHeight);
 }
 //////////////////////////////////////////////////////////////////////////////////
 void Output::PrintMsg(string msg) const
@@ -74,9 +81,11 @@ void Output::ClearStatusBar()const
 	int MsgY = UI.StatusBarHeight - 10;
 
 	//Overwrite using background color to erase the message
+	//Overwrite using background color to erase the message
 	pWind->SetPen(UI.BkGrndColor);
 	pWind->SetBrush(UI.BkGrndColor);
-	pWind->DrawRectangle(MsgX, UI.height - MsgY, UI.width, UI.height);
+	//Redraw the background of the status bar text area
+	pWind->DrawRectangle(MsgX, UI.height - UI.StatusBarHeight + 2, UI.width, UI.height);
 }
 
 void Output::ClearDesignToolBar() 
@@ -123,8 +132,14 @@ void Output::CreateDesignToolBar() const
 	MenuItemImages[INV] = "images\\Menu\\INV.jpg";
 	MenuItemImages[SWT] = "images\\Menu\\SWT.jpg";
 	MenuItemImages[BLB] = "images\\Menu\\BLB.jpg";
+	
+	MenuItemImages[ITM_LABEL] = "images\\Menu\\ITM_LABEL.jpg";
+	MenuItemImages[ITM_EDIT] = "images\\Menu\\ITM_EDIT.jpg";
+	MenuItemImages[ITM_DELETE] = "images\\Menu\\ITM_DELETE.jpg";
+	MenuItemImages[ITM_SAVE] = "images\\Menu\\ITM_SAVE.jpg";
+	MenuItemImages[ITM_LOAD] = "images\\Menu\\ITM_LOAD.jpg";
+
 	MenuItemImages[ITM_EXIT] = "images\\Menu\\Menu_Exit.jpg";
-	MenuItemImages[S] = "images\\Menu\\S.jpg";
 
 	//TODO: Prepare image for each menu item and add it to the list
 
@@ -376,14 +391,23 @@ void Output::DrawConnection(GraphicsInfo r_GfxInfo, bool selected) const
 {
 
 	if (selected) {
-		pWind->SetPen(RED);
+		pWind->SetPen(UI.SelectColor, 3);
+	}
+	else
+	{
+		pWind->SetPen(UI.ConnColor, 2);
 	}
 
-	//TODO: Add code to draw connection
-	int half = (r_GfxInfo.x2 - r_GfxInfo.x1) / 2;
-	pWind->DrawLine(r_GfxInfo.x1, r_GfxInfo.y1, r_GfxInfo.x1 + half, r_GfxInfo.y1);
-	pWind->DrawLine(r_GfxInfo.x1 + half, r_GfxInfo.y1, r_GfxInfo.x1 + half, r_GfxInfo.y2);
-	pWind->DrawLine(r_GfxInfo.x1 + half, r_GfxInfo.y2, r_GfxInfo.x1 + half + half, r_GfxInfo.y2);
+	//Draw connection (orthogonal)
+	//1. Horizontal line from x1 to mid x
+	//2. Vertical line from y1 to y2 at mid x
+	//3. Horizontal line from mid x to x2
+	
+	int midX = (r_GfxInfo.x1 + r_GfxInfo.x2) / 2;
+	
+	pWind->DrawLine(r_GfxInfo.x1, r_GfxInfo.y1, midX, r_GfxInfo.y1);
+	pWind->DrawLine(midX, r_GfxInfo.y1, midX, r_GfxInfo.y2);
+	pWind->DrawLine(midX, r_GfxInfo.y2, r_GfxInfo.x2, r_GfxInfo.y2);
 }
 
  

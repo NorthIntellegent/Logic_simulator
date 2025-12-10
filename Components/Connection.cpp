@@ -46,3 +46,21 @@ void Connection::setInputPinStatus(int n, STATUS s)
 {
 	SrcPin->setStatus(s);
 }
+
+void Connection::Save(ofstream &fout)
+{
+	Component* pSrcComp = SrcPin->getComponent();
+	Component* pDstComp = DstPin->getComponent();
+
+	int srcID = (pSrcComp) ? pSrcComp->GetID() : -1;
+	int dstID = (pDstComp) ? pDstComp->GetID() : -1;
+	int pinNum = (pDstComp) ? pDstComp->GetInputPinIndex(DstPin) : -1;
+
+	fout << srcID << " " << dstID << " " << pinNum << endl;
+}
+
+void Connection::Load(ifstream &fin)
+{
+	int id1, id2, pin;
+	fin >> id1 >> id2 >> pin;
+}

@@ -21,7 +21,9 @@ protected:
 	int m_Inputs;		//No. of input pins of that Gate.
 public:
 	Gate(int r_Inputs, int r_FanOut);
-	
+	virtual int GetInputPinIndex(InputPin* pPin);
+	OutputPin* GetOutputPin();
+	InputPin* GetInputPin(int n); // n is 0-based index
 
 };
 

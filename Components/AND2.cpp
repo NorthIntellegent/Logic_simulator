@@ -43,3 +43,24 @@ void AND2::setInputPinStatus(int n, STATUS s)
 {
 	m_InputPins[n-1].setStatus(s);
 }
+
+void AND2::Save(ofstream &fout)
+{
+	string label = GetLabel();
+	if (label == "") label = "$";
+	fout << "AND2 " << GetID() << " " << label << " " << m_GfxInfo.x1 << " " << m_GfxInfo.y1 << endl;
+}
+
+void AND2::Load(ifstream &fin)
+{
+	string label;
+	int id, x, y;
+	fin >> id >> label >> x >> y;
+	SetID(id);
+	if (label == "$") label = "";
+	SetLabel(label);
+	m_GfxInfo.x1 = x;
+	m_GfxInfo.y1 = y;
+	m_GfxInfo.x2 = x + UI.AND2_Width;
+	m_GfxInfo.y2 = y + UI.AND2_Height;
+}

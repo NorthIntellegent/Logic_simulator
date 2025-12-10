@@ -42,6 +42,13 @@ public:
 	//Adds a new component to the list of components
 	void AddComponent(Component* pComp);
 
+	Component* GetComponentByPosition(int x, int y);
+
+	void DeleteComponent(Component* pComp);
+
+	void SaveCircuit(string filename);
+	void LoadCircuit(string filename);
+
 	//destructor
 	~ApplicationManager();
 };
