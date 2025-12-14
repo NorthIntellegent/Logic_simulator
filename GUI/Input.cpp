@@ -79,6 +79,7 @@ ActionType Input::GetUserAction() const
 			case ITM_DELETE: return DEL;
 			case ITM_SAVE: return SAVE;
 			case ITM_LOAD: return LOAD;
+			case ITM_SIM_MODE: return SIM_MODE;
 
 			case ITM_EXIT: return EXIT;	
 			
@@ -97,7 +98,32 @@ ActionType Input::GetUserAction() const
 	}
 	else	//Application is in Simulation mode
 	{
-		return SIM_MODE;	//This should be changed after creating the compelete simulation bar 
+		//[1] If user clicks on the Toolbar
+		if ( y >= 0 && y < UI.ToolBarHeight)
+		{	
+			//Check which Menu item was clicked
+			int ClickedItemOrder = (x / UI.ToolItemWidth);
+			
+			switch (ClickedItemOrder)
+			{
+			case ITM_SIM: return SIM_MODE;
+			case ITM_TRUTH: return Create_TruthTable;
+			case CHK: return Change_Switch;
+			case CRCK: return Change_Switch;  //TODO: Add proper circuit check action
+			case BAK: return DSN_MODE;  // Back to Design Mode
+			
+			default: return DSN_TOOL;	//A click on empty place in simulation toolbar
+			}
+		}
+	
+		//[2] User clicks on the drawing area
+		if ( y >= UI.ToolBarHeight && y < UI.height - UI.StatusBarHeight)
+		{
+			return SELECT;	//user want to select/unselect a component
+		}
+		
+		//[3] User clicks on the status bar
+		return STATUS_BAR;
 	}
 
 }

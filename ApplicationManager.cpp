@@ -79,6 +79,19 @@ void ApplicationManager::ExecuteAction(ActionType ActType)
 			pAct = new LoadAction(this);
 			break;
 
+		case SIM_MODE:
+			OutputInterface->ClearDesignToolBar();
+			OutputInterface->ClearDrawingArea();
+			OutputInterface->CreateSimulationToolBar();
+			break;
+
+		case DSN_MODE:
+			OutputInterface->ClearDesignToolBar();
+			OutputInterface->ClearDrawingArea();
+			OutputInterface->CreateDesignToolBar();
+			UpdateInterface();  // Redraw all components
+			break;
+
 		case EXIT:
 			///TODO: create ExitAction here
 			break;

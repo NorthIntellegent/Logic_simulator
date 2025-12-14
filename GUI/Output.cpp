@@ -13,7 +13,7 @@ Output::Output()
 	UI.SelectColor = BLUE;
 	UI.ConnColor = RED;
 	UI.MsgColor = BLUE;
-	UI.BkGrndColor = GRAY;
+	UI.BkGrndColor = WHITE;
 	
 	//Create the drawing window
 	pWind = CreateWind(UI.width, UI.height, UI.wx, UI.wy);	
@@ -138,6 +138,7 @@ void Output::CreateDesignToolBar() const
 	MenuItemImages[ITM_DELETE] = "images\\Menu\\ITM_DELETE.jpg";
 	MenuItemImages[ITM_SAVE] = "images\\Menu\\ITM_SAVE.jpg";
 	MenuItemImages[ITM_LOAD] = "images\\Menu\\ITM_LOAD.jpg";
+	MenuItemImages[ITM_SIM_MODE] = "images\\Menu\\S.jpg";
 
 	MenuItemImages[ITM_EXIT] = "images\\Menu\\Menu_Exit.jpg";
 
@@ -188,9 +189,9 @@ void Output::CreateSimulationToolBar() const
 
 	//TODO: Write code to draw the simualtion toolbar (similar to that of design toolbar drawing)
 	string MenuItemImages[ITM_SIM_CNT]; 
-	MenuItemImages[CHK] = "images\\Menu\\CHK.jpg";
-	MenuItemImages[ITM_TRUTH] = "images\\Menu\\ITM_TRUTH.jpg";
 	MenuItemImages[ITM_SIM] = "images\\Menu\\ITM_SIM.jpg";
+	MenuItemImages[ITM_TRUTH] = "images\\Menu\\ITM_TRUTH.jpg";
+	MenuItemImages[CHK] = "images\\Menu\\CHK.jpg";
 	MenuItemImages[CRCK] = "images\\Menu\\CRCK.jpg";
 	MenuItemImages[BAK] = "images\\Menu\\BAK.jpg";
 	int iconW = UI.AND2_Width;
@@ -216,7 +217,7 @@ void Output::CreateSimulationToolBar() const
 //								Components Drawing Functions							//
 //======================================================================================//
 
-void Output::DrawAND2(GraphicsInfo r_GfxInfo, bool selected) const
+void Output::DrawAND2(GraphicsInfo r_GfxInfo, bool selected, string label) const
 {
 	string GateImage;
 	if(selected)	//use image in the highlighted case
@@ -227,6 +228,20 @@ void Output::DrawAND2(GraphicsInfo r_GfxInfo, bool selected) const
 	//Draw AND2 Gate at Gfx_Info (1st corner)
 	//Set the Image Width & Height by AND2 Image Parameter in UI_Info
 	pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.AND2_Width, UI.AND2_Height);
+
+	//Draw label below the gate if it exists
+	if(label != "")
+	{
+		pWind->SetFont(16, PLAIN, BY_NAME, "Fixedsys");
+		pWind->SetPen(selected ? UI.SelectColor : BLACK);
+		// Calculate center position based on gate width
+		int gateCenter = r_GfxInfo.x1 + (UI.AND2_Width / 2);
+		// Estimate text width (approximately 8 pixels per character for 18pt font)
+		int textWidth = label.length() * 8;
+		int labelX = gateCenter - (textWidth / 2);
+		int labelY = r_GfxInfo.y1 + UI.AND2_Height + 5;
+		pWind->DrawString(labelX, labelY, label);
+	}
 }
 
 //TODO: Add similar functions to draw all components
@@ -387,7 +402,7 @@ void Output::DrawLED(GraphicsInfo r_GfxInfo, bool selected) const
 	pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.AND2_Width, UI.AND2_Height);
 }
 
-void Output::DrawConnection(GraphicsInfo r_GfxInfo, bool selected) const
+void Output::DrawConnection(GraphicsInfo r_GfxInfo, bool selected, string label) const
 {
 
 	if (selected) {
@@ -408,6 +423,15 @@ void Output::DrawConnection(GraphicsInfo r_GfxInfo, bool selected) const
 	pWind->DrawLine(r_GfxInfo.x1, r_GfxInfo.y1, midX, r_GfxInfo.y1);
 	pWind->DrawLine(midX, r_GfxInfo.y1, midX, r_GfxInfo.y2);
 	pWind->DrawLine(midX, r_GfxInfo.y2, r_GfxInfo.x2, r_GfxInfo.y2);
+
+	//Draw label near the middle of the connection if it exists
+	if(label != "")
+	{
+		pWind->SetFont(14, PLAIN, BY_NAME, "Fixedsys");
+		pWind->SetPen(selected ? UI.SelectColor : BLACK);
+		int midY = (r_GfxInfo.y1 + r_GfxInfo.y2) / 2;
+		pWind->DrawString(midX + 5, midY, label);
+	}
 }
 
  
