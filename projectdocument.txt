@@ -1,0 +1,297 @@
+﻿Introduction
+A logic circuit is made up of interconnected components such as logic gates, switches, and LEDs. Each component has input and output pins that can be connected to form complete circuits. Gates process input signals to produce output values based on logical operations (e.g., AND, OR, NOT). Switches are used to control inputs, and LEDs are used to display outputs.
+Manually analyzing complex circuits is time-consuming, so logic simulators are used to visualize and test digital circuits before implementation.
+In this project, you will develop a simple logic circuit simulator and designer using C++ and object-oriented programming. Your program should allow users to:
+* Build circuits by placing components and connecting them.
+* Simulate their behavior using switches and LEDs.
+* Save and load circuit designs.
+* Switch between Design Mode and Simulation Mode.
+NOTE: The application should be designed so that the types of components and types of operations can be easily extended. The rest of this document describes the details of the application you are required to build.
+Project Schedule
+Project Phase
+	Deliverable
+	Due Date
+	Phase 1
+	Input/Output Classes
+	22th Nov
+	Phase 2
+	Final Project Delivery
+	13th Dec
+	Penalty will applied at late submissions
+Main Operations
+Your application should support two main modes:
+1. Design Mode (default)
+2. Simulation Mode
+1. Design Mode
+In this mode, users can build and edit circuits. The following actions must be supported:
+1. Add Components
+   * Logic Gates:
+      * Buffer and Inverter
+      * 2-input: AND, OR, NAND, NOR, XOR, XNOR
+      * 3-input: AND, NOR, XOR
+   * Switches: Output-only components (no inputs).
+   * LEDs: Input-only components (no outputs).
+2. Connect Components
+   * Connect an output pin of one component to an input pin of another.
+   * One output pin may feed multiple inputs, but each connection must be created separately.
+3. Label Components/Connections
+   * Each component or connection can have a user-defined label.
+4. Edit Component/Connection
+   * Editing a component is to change its labels, editing a connection is to change its label or modify source/destination pins.
+5. Select / Unselect a Component
+   * When clicking a component, it has to be highlighted.
+6. Delete Component/Connection
+   * Deleting a component should also delete all its associated connections.
+   * Deleting a separate connection should also be supported.
+7. Move Component
+   * Component can be dragged, and its connections should move accordingly.
+8. Save / Load Circuits
+   * Save and load circuit designs using the defined file format.
+   * See file format section
+9. Copy / Cut / Paste Component
+   * Copy: copying a component without connections.
+   * Cut: Removes a component (and its connections), allowing it to be pasted elsewhere without its connections.
+10. Multiple-Selection:
+   * User can select multiple components (including connections) to perform multi-move or multi-delete. All selected components must be highlighted.
+11. Switch to Simulation Mode
+   * Only possible if the circuit is complete and correctly connected.
+12. Exit Application
+   * Properly close the program and free resources.
+Note: Drawing should be limited to the design area. The toolbar and status bar should not be used for component placement.
+2. Simulation Mode
+In this mode, users can test and verify the designed circuit.
+1. Circuit Validation
+   * Ensure all pins are connected and no component is floating.
+2. Simulate Circuit Operation
+   * Changing the state of switches should update the LEDs in real time.
+3. Generate Truth Table
+   * The application must be able to create the truth table of the designed circuit. It should be able to display the truth table for up to 5 inputs. For circuits with inputs greater than 5, the truth table should be saved to a text file.
+4. Circuit Probing
+   * Allow users to inspect the value of any pin or connection.
+5. Switch Back to Design Mode
+   * Return to design mode to modify the circuit.
+Important Notes:
+* The above operations are the minimum requirements to accept the project.
+* Each operation should have a corresponding action class. (see "Main Classes" section)
+* The code of any operation does NOT compensate for the absence of any other operation; for example, if you make all the above operations except the delete operation, you will lose the grades of the delete operation no matter how good other operations are.
+Bonus Features (Optional)
+Implementing any of the following will earn bonus marks:
+* Neat Layout: Connections should be drawn as vertical and horizontal lines only and should not overlap. Components also should not overlap.
+* Complex Circuit Blocks: User can select part of the designed circuit and convert it into a block diagram that operates exactly as the selected components.
+* Undo/Redo actions.
+* Detecting Circuit Errors: To detect the following errors:
+   * First circuit level contains components other than switches
+   * Last circuit level contains components other than LEDs
+   * A feedback in the circuit
+Main Classes
+Because this is your first object oriented application, you are given a code framework where we have partially written the code of some of the project classes. For the graphical user interface (GUI), we have integrated an open-source graphics library that you will use to easily handle GUI. You should stick to the given design and complete the given framework by either:
+* Extending some classes
+* Inheriting from some classes (or even creating new base classes but after instructor approval)
+Below is the class diagram then a description for the basic classes.
+Input Class:
+* All user inputs must come through this class. If any other class wants to read any input, it must call a member function of the input class.
+* You should add suitable member functions for different types of inputs.
+Output Class:
+* This class is responsible for all GUI outputs.
+* It is responsible for toolbar and status bar creation, circuit drawing, and for messages printing to the user.
+* All outputs must be done through this class.
+* You should add suitable member functions for different types of outputs.
+ApplicationManager Class:
+* This is the maestro class that controls everything in the application.
+* It has pointers to objects of all other classes in the application.
+* As its name shows, its job is to manage other classes not to do other classes' jobs.
+* So it just instructs other classes to do their jobs.
+* In addition, this class maintains the list of components inside the application.
+Pin Class:
+* This is the base class for input and output pins (InputPin class and OutputPin class).
+Component Class:
+* This is the base class for all types of circuit components (switches, gates, LEDs, and connections).
+* To add a new component (a new gate for example), you must inherit from this class.
+* Then you should override virtual functions found in the class Component.
+* You can also add more details for the class Component itself if needed.
+Action Class:
+* This is the base class for all types of actions (operations) to be supported by the application.
+* To add a new action, you must inherit from this class.
+* Then you should override virtual functions found in the class Action.
+* You can also add more details for the class Action itself if needed.
+Implementation Guidelines
+Your project should follow a modular, object-oriented design consistent with the given class framework.
+1. Each user action is typically performed in these four steps:
+I. Get the user action type (from the Input class).
+II. Create a suitable Action object based on the input.
+III. Execute the Action to modify the circuit.
+IV. Update the interface (through the Output class).
+Only Input and Output classes may directly interact with the GUI library. All other classes must use them through function calls.
+2. Use of Pointers and Polymorphism
+I. Pass and return pointers between functions and classes whenever possible.
+II. Use virtual functions and inheritance to enable polymorphism.
+III. Avoid unnecessary code duplication—each class should handle only its own responsibilities.
+3. Incremental Development
+I. Compile and test each class separately before integrating everything.
+II. Fix all compilation and logic errors in one class before moving to the next.
+III. When class B depends on class A, ensure A is fully functional first.
+4. Division of Work (Team Collaboration)
+I. Workload must be clearly divided among team members.
+II. Each student should be responsible for specific classes or functionalities.
+III. The first question during evaluation will be:
+"Which classes or parts were you responsible for?"
+A. Answers like "we all worked together" will be considered unsatisfactory.
+5. Saving and Loading
+I. Circuits can be saved or loaded even if incomplete.
+II. Component::Save() and Component::Load() should be virtual and overridden by all derived components.
+III. The Save/Load actions only open the file and call ApplicationManager::Save() or ApplicationManager::Load().
+IV. ApplicationManager iterates over all components and connections to perform the operation.
+Example Scenario
+The application window may look like the following window.
+([Diagram Omitted])
+Here is an example scenario for adding one of the AND gates above and drawing it on the output window. It's performed through the four main steps mentioned in the previous section (see main() function in the given framework code).
+   1. Get user action
+a. The ApplicationManager calls the Input class and waits for user action
+b. The user clicks on the "AND gate" icon in the toolbar
+c. The Input class checks the area where the user clicked and recognizes he wants to add AND gate to the circuit, It returns ADD_AND_GATE_2 (a constant indicating the required action) to the manager
+   2. Create a suitable action object
+a. ApplicationManager::ExecuteAction is called, it creates an object of type AddANDgate2 action and calls AddANDgate2::Execute to execute the action.
+   3. Execute the action
+a. AddANDgate2::Execute
+i. Calls the Input class to get the gate position from the user. Here, to print a message to the user, Execute calls the Output::PrintMsg function
+ii. Creates a component of type AND2 and asks the ApplicationManager to add it to the current list of components (by calling AddComponent)
+   4. Reflect the action on the interface
+(ApplicationManager::UpdateInterface)
+a. ApplicationManager::UpdateInterface calls the virtual function Component::Draw for each component (in this example function AND2::Draw is called)
+b. AND2::Draw calls Output::DrawAND2 to draw AND gate
+File Format
+Your application should be able to save and load a circuit from a simple text file. In this section the file format is described together with and example and an explanation for that example. The application should enable the user to create a new circuit or to load an existing circuit. If the user wants to load an existing circuit the application loads the circuit form the required file, Otherwise, a new empty window is created
+Here is a sample of how the file should look like.
+Number_of_Components
+Comp_1_Type   Comp_ID   Label  Component_Graphics_info
+Comp_2_Type   Comp_ID   Label  Component_Graphics_info
+...
+Comp_n_Type   Comp_ID   Label  Component_Graphics_info
+Connections
+Source_Comp_ID   Target_Comp_ID   Pin_number
+-1
+
+Example:
+The following figure represents the given logic circuit with its file format representation
+8
+SWTCH   1    sw1   90    154
+SWTCH   2    sw2   90    227
+AND2    4    $     170   159
+NOR3    6    out   290   235
+SWTCH   13   sw3   90    330
+LED     8    L1    406   276
+NOT     5    gate2 173   343
+LED     7    Result 382  231
+Connections
+1       4    1
+2       4    2
+2       6    2
+3       5    1
+4       6    1
+5       6    3
+5       8    1
+6       7    1
+-1
+
+Explanation of the above example
+Here is the example and the explanation of each line
+8 //Circuit has 8 components
+SWTCH 1 sw1 90 154
+//Switch, ID=1, label="sw1", its rectangular area corner is (90,154)
+SWTCH 2 sw2 90 227
+//Switch, ID=2, label="sw2", its rectangular area corner is (90,227)
+AND2 4 $ 170 159
+//2-input AND, ID=4, label=No Label, its rectangular area corner is (170,159)
+NOR3 6 out 290 235
+//3-input NOR, ID=6, label="out", its rectangular area corner is (290,235)
+SWTCH 3 sw3 90 330
+//Switch, ID=3, label="sw3", its rectangular area corner is (90,330)
+LED 8 L1 406 276
+//LED, ID=8, label="L1", its rectangular area corner is (406,276)
+NOT 5 gate2 173 343
+//NOT, ID=5, label="gate2", its rectangular area corner is (173,343)
+LED 7 Result 382 231
+//LED, ID=7, label="Result", its rectangular area corner is (382,231)
+Connections //Start of connections part
+1 4 1 //Component 1 (Switch) is connected to Comp 4 (AND2) at pin# 1
+2 4 2 //Comp 2 (Switch) is connected to Comp 4 (AND2) at pin# 2
+2 6 2 //Comp 2 (Switch) is connected to Comp 6 (NOR3) at pin# 2
+3 5 1 //Comp 3 (Switch) is connected to Comp 5 (NOT) at pin# 1
+4 6 1 //Comp 4 (AND2) is connected to Comp 6 (NOR3) at pin# 1
+5 6 3 //Comp 5 (NOT) is connected to Comp 6 (NOR3) at pin# 3
+5 8 1 //Comp 5 (NOT) is connected to Comp 8 (LED) at pin# 1
+6 7 1 //Comp 6 (NOR3) is connected to Comp 7 (LED) at pin# 1
+-1 //End of file signal
+Notes:
+      * You can select any IDs for the components, Just make sure ID is unique for each component
+      * You are allowed to add some modification to this file format if necessary, but before adding such modifications, get the approval from your instructor.
+      * You can use numbers instead of text to simplify the load operation, For example you can give each component type a number, This is must be done by using ComponentType enum in DEF.h file
+Project Phases
+1. Phase 1 (Input and Output classes) [15% of total project grade]
+In this phase you will implement the input and the output classes because they don't depend on any other classes. The Input and Output classes should be finalized and ready to run and test. Any expected user interaction (input/output) that will be needed by phase 2, should be implemented at this phase.
+Input And Output classes code and test code:
+You are given a code that contains both the input and output classes partially implemented each team should complete such classes as follows:
+      1. Input Class:
+a. Complete the function Input::GetString to read a string from the user.
+b. Complete the function Input::GetUserAction where the input class should detect all possible actions according to the coordinates clicked by the user.
+c. Add any other needed member data or functions.
+      2. Output Class:
+a. Add/Update member functions to
+i. Create the full tool bars, Output class should create two tool bars, design tool bar and simulation tool bar with full items.
+ii. Draw different types of Components(OR2, NAND2, SWITCH, LED).
+iii. Draw each component in all possible cases, normal, highlighted.
+iv. Draw Connections.
+b. Add any other needed member data or functions.
+      3. Test Code: (This is not part of the input or the output class).
+Deliverables:
+Each team delivers a compressed file that contains IDs.txt, input,Output classes and a test program. (file name: team_#.zip)
+2. Phase 2 (Project Delivers) [15% of total project grade]
+In this phase, the I/O classes should be added to the project framework code and the remaining classes should be implemented. Start by implementing the base classes then move to derived classes, To save time, work should be divided between team members.
+Deliverables:
+         1. Workload division: a page containing team info and a table containing members' names and the classes of each member.
+         2. A compressed folder containing the following
+a. IDs.txt file ( information about the team: name,IDs,emails).
+b. The workload division document.
+c. The project code and resources files.
+d. Sample circuit files: Three different circuits, For each circuit, Provide:
+i. Circuit text file.
+ii. Screenshot for the circuit generated by your program.
+iii. Screenshot of one case of circuit simulation.
+Final Phase Evaluation Criteria
+Note: Number of students per team -> 3-4 students
+Basic Actions [30%]
+            * (50%) Add (create) components and connections
+            * (50%) Label, Delete, Edit, and Select
+Advanced Actions [15%]
+            * (20%) Move
+            * (20%) Copy-Cut-paste
+            * (60%) Multiple selection, multiple delete and multiple move.
+Circuit Save/Load [5%]
+            * (20%) Sticking to file format
+            * (80%) Each object saves/loads itself correctly
+Circuit Simulation [25%]
+            * (40%) Add (create) components and connections
+            * (50%) Label, Delete, Edit, and Select
+            * (10%) Circuit Probing
+GUI Input/Output [5%]
+            * (40%) Input Class
+            * (60%) Output Class
+Basic OOP Concepts [10%]
+            * (20%) Encapsulation
+            * (40%) No class is performing the function of another class
+            * (40%) Polymorphism: use of pointers and virtual function
+Integration & Run [7%]
+            * (30%) NoCompilation Errors
+            * (20%) No Warnings( other than graphics library warnings, if any)
+            * (50%) No Runtime errors
+Code Organization & Style [3%]
+            * (50%) Naming: variables, classes, constants
+            * (50%) Indentation & Comments
+Bonus Operations [max 10%]
+The total grade of all bonus operations can never exceed 10% of project grade
+Individuals Evaluation
+Each team member must be responsible for some classes and must answer some questions showing that he/she understands both the program logic and the implementation details. Each member will get a percentage grade (IG) of the total team grades according to this evaluation.
+Note: we will reduce the IG in the following cases:
+            * Not working enough
+            * Neglecting or preventing another team member from working enough
+Cheating results in zero grade for all teams involved.

@@ -1,5 +1,17 @@
 #include "ApplicationManager.h"
 #include "Actions\AddANDgate2.h"
+#include "Actions\AddNANDgate2.h"
+#include "Actions\AddNORgate2.h"
+#include "Actions\AddORgate2.h"
+#include "Actions\AddXNORgate2.h"
+#include "Actions\AddXORgate2.h"
+#include "Actions\AddANDgate3.h"
+#include "Actions\AddNORgate3.h"
+#include "Actions\AddXORgate3.h"
+#include "Actions\AddBuffer.h"
+#include "Actions\AddInverter.h"
+#include "Actions\AddSwitch.h"
+#include "Actions\AddLED.h"
 #include "Actions\AddLabel.h"
 #include "Actions\EditLabel.h"
 #include "Actions\Delete.h"
@@ -8,6 +20,18 @@
 #include "Actions\LoadAction.h"
 #include "Components\Connection.h"
 #include "Components\AND2.h"
+#include "Components\NAND2.h"
+#include "Components\NOR2.h"
+#include "Components\OR2.h"
+#include "Components\XNOR2.h"
+#include "Components\XOR2.h"
+#include "Components\AND3.h"
+#include "Components\NOR3.h"
+#include "Components\XOR3.h"
+#include "Components\BUFFER.h"
+#include "Components\INVERTER.h"
+#include "Components\SWITCH.h"
+#include "Components\LED.h"
 #include "Components\Gate.h"
 #include <fstream>
 #include <iostream>
@@ -49,6 +73,54 @@ void ApplicationManager::ExecuteAction(ActionType ActType)
 	{
 		case ADD_AND_GATE_2:
 			pAct= new AddANDgate2(this);	
+			break;
+
+		case ADD_OR_GATE_2:
+			pAct = new AddORgate2(this);
+			break;
+
+		case ADD_NAND_GATE_2:
+			pAct = new AddNANDgate2(this);
+			break;
+
+		case ADD_NOR_GATE_2:
+			pAct = new AddNORgate2(this);
+			break;
+
+		case ADD_XOR_GATE_2:
+			pAct = new AddXORgate2(this);
+			break;
+
+		case ADD_XNOR_GATE_2:
+			pAct = new AddXNORgate2(this);
+			break;
+
+		case ADD_AND_GATE_3:
+			pAct = new AddANDgate3(this);
+			break;
+
+		case ADD_NOR_GATE_3:
+			pAct = new AddNORgate3(this);
+			break;
+
+		case ADD_XOR_GATE_3:
+			pAct = new AddXORgate3(this);
+			break;
+
+		case ADD_Buff:
+			pAct = new AddBuffer(this);
+			break;
+
+		case ADD_INV:
+			pAct = new AddInverter(this);
+			break;
+
+		case ADD_Switch:
+			pAct = new AddSwitch(this);
+			break;
+
+		case ADD_LED:
+			pAct = new AddLED(this);
 			break;
 
 		case ADD_Label:
@@ -223,6 +295,30 @@ void ApplicationManager::LoadCircuit(string filename)
 		
 		if (type == "AND2")
 			pComp = new AND2(GfxInfo, AND2_FANOUT);
+		else if (type == "OR2")
+			pComp = new OR2(GfxInfo, OR2_FANOUT);
+		else if (type == "NAND2")
+			pComp = new NAND2(GfxInfo, NAND2_FANOUT);
+		else if (type == "NOR2")
+			pComp = new NOR2(GfxInfo, NOR2_FANOUT);
+		else if (type == "XOR2")
+			pComp = new XOR2(GfxInfo, XOR2_FANOUT);
+		else if (type == "XNOR2")
+			pComp = new XNOR2(GfxInfo, XNOR2_FANOUT);
+		else if (type == "AND3")
+			pComp = new AND3(GfxInfo, AND3_FANOUT);
+		else if (type == "NOR3")
+			pComp = new NOR3(GfxInfo, NOR3_FANOUT);
+		else if (type == "XOR3")
+			pComp = new XOR3(GfxInfo, XOR3_FANOUT);
+		else if (type == "BUFFER")
+			pComp = new BUFFER(GfxInfo, BUFFER_FANOUT);
+		else if (type == "INVERTER")
+			pComp = new INVERTER(GfxInfo, INVERTER_FANOUT);
+		else if (type == "SWITCH")
+			pComp = new SWITCH(GfxInfo, SWITCH_FANOUT);
+		else if (type == "LED")
+			pComp = new LED(GfxInfo);
 		// TODO: Add other component types here
 		
 		if (pComp)
