@@ -49,7 +49,7 @@ void Component::SetSelected(bool s)
 	m_Selected = s;
 }
 
-bool Component::IsSelected()
+bool Component::IsSelected() const
 {
 	return m_Selected;
 }

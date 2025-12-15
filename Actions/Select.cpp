@@ -34,10 +34,33 @@ void Select::Execute()
 	//Get the component at this position
 	pSelectedComp = pManager->GetComponentByPosition(Cx, Cy);
 
+	Output* pOut = pManager->GetOutput();
+
 	if (pSelectedComp)
 	{
 		//Toggle selection state
 		pSelectedComp->SetSelected(!pSelectedComp->IsSelected());
+
+		//Display component info in status bar
+		if (pSelectedComp->IsSelected())
+		{
+			string label = pSelectedComp->GetLabel();
+			if (label != "")
+				pOut->PrintMsg("Selected: " + label);
+			else
+				pOut->PrintMsg("Selected: " + pSelectedComp->GetTypeName());
+		}
+		else
+		{
+			pOut->PrintMsg("Component deselected");
+		}
+
+		//Update interface to show highlighting
+		pManager->UpdateInterface();
+	}
+	else
+	{
+		pOut->PrintMsg("No component at this location");
 	}
 }
 

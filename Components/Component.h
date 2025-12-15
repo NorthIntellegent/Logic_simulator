@@ -40,7 +40,10 @@ public:
 	virtual bool Inside(int x, int y);
 	
 	void SetSelected(bool s);
-	bool IsSelected();
+	bool IsSelected() const;
+
+	virtual string GetTypeName() const { return "Component"; } // Returns component type name
+
 
 	virtual int GetInputPinIndex(InputPin* pPin) { return -1; } // Default implementation returns -1
 	

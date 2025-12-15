@@ -24,6 +24,9 @@ public:
 	virtual void Save(ofstream &fout);
 	virtual void Load(ifstream &fin);
 
+	virtual string GetTypeName() const { return "AND2"; }
+
+
 };
 
 #endif
