@@ -92,6 +92,8 @@ ActionType Input::GetUserAction() const {
         return SAVE;
       case ITM_LOAD:
         return LOAD;
+      case ITM_SWITCH_SIM:
+        return SIM_MODE;
 
       case ITM_EXIT:
         return EXIT;

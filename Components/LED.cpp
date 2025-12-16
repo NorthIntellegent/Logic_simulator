@@ -22,7 +22,7 @@ void LED::Operate()
 void LED::Draw(Output* pOut)
 {
 	//Call output class and pass drawing info to it.
-	pOut->DrawLED(m_GfxInfo);
+	pOut->DrawLED(m_GfxInfo, IsSelected(), GetLabel());
 }
 
 //returns status of outputpin - LED has no output pin

@@ -23,7 +23,7 @@ void SWITCH::Operate()
 void SWITCH::Draw(Output* pOut)
 {
 	//Call output class and pass drawing info to it.
-	pOut->DrawSWITCH(m_GfxInfo);
+	pOut->DrawSWITCH(m_GfxInfo, IsSelected(), GetLabel());
 }
 
 //returns status of outputpin

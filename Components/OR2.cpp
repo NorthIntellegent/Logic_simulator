@@ -22,7 +22,7 @@ void OR2::Operate()
 void OR2::Draw(Output* pOut)
 {
 	//Call output class and pass gate drawing info to it.
-	pOut->DrawOR2(m_GfxInfo);
+	pOut->DrawOR2(m_GfxInfo, IsSelected(), GetLabel());
 }
 
 //returns status of outputpin

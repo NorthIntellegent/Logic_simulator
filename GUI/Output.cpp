@@ -12,7 +12,7 @@ Output::Output() {
   UI.SelectColor = BLUE;
   UI.ConnColor = RED;
   UI.MsgColor = BLUE;
-  UI.BkGrndColor = GRAY;
+  UI.BkGrndColor = WHITE;
 
   // Create the drawing window
   pWind = CreateWind(UI.width, UI.height, UI.wx, UI.wy);
@@ -123,12 +123,15 @@ void Output::CreateDesignToolBar() const {
   MenuItemImages[ITM_DELETE] = "images\\Menu\\ITM_DELETE.jpg";
   MenuItemImages[ITM_SAVE] = "images\\Menu\\ITM_SAVE.jpg";
   MenuItemImages[ITM_LOAD] = "images\\Menu\\ITM_LOAD.jpg";
+  MenuItemImages[ITM_SWITCH_SIM] = "images\\Menu\\S.jpg";
 
   MenuItemImages[ITM_EXIT] = "images\\Menu\\Menu_Exit.jpg";
 
+
   // Draw menu item one image at a time
-  int iconW = UI.AND2_Width;
-  int iconH = UI.AND2_Height;
+  // Use consistent icon size for all toolbar items (40x40 to fit in 45px slots)
+  int iconW = 40;
+  int iconH = 40;
 
   for (int i = 0; i < ITM_DSN_CNT; ++i) {
     int slotX = i * UI.ToolItemWidth;
@@ -166,8 +169,10 @@ void Output::CreateSimulationToolBar() const {
   MenuItemImages[ITM_CHK] = "images\\Menu\\CHK.jpg";
   MenuItemImages[ITM_CRCK] = "images\\Menu\\CRCK.jpg";
   MenuItemImages[ITM_BAK] = "images\\Menu\\BAK.jpg";
-  int iconW = UI.AND2_Width;
-  int iconH = UI.AND2_Height;
+  
+  // Use consistent icon size for all toolbar items (40x40 to fit in 45px slots)
+  int iconW = 40;
+  int iconH = 40;
 
   for (int i = 0; i < ITM_SIM_CNT; ++i) {
     int slotX = i * UI.ToolItemWidth;
@@ -209,7 +214,8 @@ void Output::DrawAND2(GraphicsInfo r_GfxInfo, bool selected,
   }
 }
 
-void Output::DrawNAND2(GraphicsInfo r_GfxInfo, bool selected) const {
+void Output::DrawNAND2(GraphicsInfo r_GfxInfo, bool selected,
+                       string label) const {
   string GateImage;
   if (selected)
     GateImage = "Images\\Gates\\NAND_hi.jpg";
@@ -218,9 +224,21 @@ void Output::DrawNAND2(GraphicsInfo r_GfxInfo, bool selected) const {
 
   pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.AND2_Width,
                    UI.AND2_Height);
+
+  // Draw label below the gate if it exists
+  if (label != "") {
+    pWind->SetFont(16, PLAIN, BY_NAME, "Fixedsys");
+    pWind->SetPen(selected ? UI.SelectColor : BLACK);
+    int gateCenter = r_GfxInfo.x1 + (UI.AND2_Width / 2);
+    int textWidth = label.length() * 8;
+    int labelX = gateCenter - (textWidth / 2);
+    int labelY = r_GfxInfo.y1 + UI.AND2_Height + 5;
+    pWind->DrawString(labelX, labelY, label);
+  }
 }
 
-void Output::DrawOR2(GraphicsInfo r_GfxInfo, bool selected) const {
+void Output::DrawOR2(GraphicsInfo r_GfxInfo, bool selected,
+                     string label) const {
   string GateImage;
   if (selected)
     GateImage = "Images\\Gates\\OR2_hi.jpg";
@@ -229,9 +247,21 @@ void Output::DrawOR2(GraphicsInfo r_GfxInfo, bool selected) const {
 
   pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.AND2_Width,
                    UI.AND2_Height);
+
+  // Draw label below the gate if it exists
+  if (label != "") {
+    pWind->SetFont(16, PLAIN, BY_NAME, "Fixedsys");
+    pWind->SetPen(selected ? UI.SelectColor : BLACK);
+    int gateCenter = r_GfxInfo.x1 + (UI.AND2_Width / 2);
+    int textWidth = label.length() * 8;
+    int labelX = gateCenter - (textWidth / 2);
+    int labelY = r_GfxInfo.y1 + UI.AND2_Height + 5;
+    pWind->DrawString(labelX, labelY, label);
+  }
 }
 
-void Output::DrawNOR2(GraphicsInfo r_GfxInfo, bool selected) const {
+void Output::DrawNOR2(GraphicsInfo r_GfxInfo, bool selected,
+                      string label) const {
   string GateImage;
   if (selected)
     GateImage = "Images\\Gates\\NOR_hi.jpg";
@@ -240,9 +270,21 @@ void Output::DrawNOR2(GraphicsInfo r_GfxInfo, bool selected) const {
 
   pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.AND2_Width,
                    UI.AND2_Height);
+
+  // Draw label below the gate if it exists
+  if (label != "") {
+    pWind->SetFont(16, PLAIN, BY_NAME, "Fixedsys");
+    pWind->SetPen(selected ? UI.SelectColor : BLACK);
+    int gateCenter = r_GfxInfo.x1 + (UI.AND2_Width / 2);
+    int textWidth = label.length() * 8;
+    int labelX = gateCenter - (textWidth / 2);
+    int labelY = r_GfxInfo.y1 + UI.AND2_Height + 5;
+    pWind->DrawString(labelX, labelY, label);
+  }
 }
 
-void Output::DrawXOR2(GraphicsInfo r_GfxInfo, bool selected) const {
+void Output::DrawXOR2(GraphicsInfo r_GfxInfo, bool selected,
+                      string label) const {
   string GateImage;
   if (selected)
     GateImage = "Images\\Gates\\XOR_hi.jpg";
@@ -251,9 +293,21 @@ void Output::DrawXOR2(GraphicsInfo r_GfxInfo, bool selected) const {
 
   pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.AND2_Width,
                    UI.AND2_Height);
+
+  // Draw label below the gate if it exists
+  if (label != "") {
+    pWind->SetFont(16, PLAIN, BY_NAME, "Fixedsys");
+    pWind->SetPen(selected ? UI.SelectColor : BLACK);
+    int gateCenter = r_GfxInfo.x1 + (UI.AND2_Width / 2);
+    int textWidth = label.length() * 8;
+    int labelX = gateCenter - (textWidth / 2);
+    int labelY = r_GfxInfo.y1 + UI.AND2_Height + 5;
+    pWind->DrawString(labelX, labelY, label);
+  }
 }
 
-void Output::DrawXNOR2(GraphicsInfo r_GfxInfo, bool selected) const {
+void Output::DrawXNOR2(GraphicsInfo r_GfxInfo, bool selected,
+                       string label) const {
   string GateImage;
   if (selected)
     GateImage = "Images\\Gates\\XNOR_hi.jpg";
@@ -262,9 +316,21 @@ void Output::DrawXNOR2(GraphicsInfo r_GfxInfo, bool selected) const {
 
   pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.AND2_Width,
                    UI.AND2_Height);
+
+  // Draw label below the gate if it exists
+  if (label != "") {
+    pWind->SetFont(16, PLAIN, BY_NAME, "Fixedsys");
+    pWind->SetPen(selected ? UI.SelectColor : BLACK);
+    int gateCenter = r_GfxInfo.x1 + (UI.AND2_Width / 2);
+    int textWidth = label.length() * 8;
+    int labelX = gateCenter - (textWidth / 2);
+    int labelY = r_GfxInfo.y1 + UI.AND2_Height + 5;
+    pWind->DrawString(labelX, labelY, label);
+  }
 }
 
-void Output::DrawBUFFER(GraphicsInfo r_GfxInfo, bool selected) const {
+void Output::DrawBUFFER(GraphicsInfo r_GfxInfo, bool selected,
+                        string label) const {
   string GateImage;
   if (selected)
     GateImage = "Images\\Gates\\BUF_hi.jpg";
@@ -273,9 +339,21 @@ void Output::DrawBUFFER(GraphicsInfo r_GfxInfo, bool selected) const {
 
   pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.AND2_Width,
                    UI.AND2_Height);
+
+  // Draw label below the gate if it exists
+  if (label != "") {
+    pWind->SetFont(16, PLAIN, BY_NAME, "Fixedsys");
+    pWind->SetPen(selected ? UI.SelectColor : BLACK);
+    int gateCenter = r_GfxInfo.x1 + (UI.AND2_Width / 2);
+    int textWidth = label.length() * 8;
+    int labelX = gateCenter - (textWidth / 2);
+    int labelY = r_GfxInfo.y1 + UI.AND2_Height + 5;
+    pWind->DrawString(labelX, labelY, label);
+  }
 }
 
-void Output::DrawINVERTER(GraphicsInfo r_GfxInfo, bool selected) const {
+void Output::DrawINVERTER(GraphicsInfo r_GfxInfo, bool selected,
+                          string label) const {
   string GateImage;
   if (selected)
     GateImage = "Images\\Gates\\INV_hi.jpg";
@@ -284,9 +362,21 @@ void Output::DrawINVERTER(GraphicsInfo r_GfxInfo, bool selected) const {
 
   pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.AND2_Width,
                    UI.AND2_Height);
+
+  // Draw label below the gate if it exists
+  if (label != "") {
+    pWind->SetFont(16, PLAIN, BY_NAME, "Fixedsys");
+    pWind->SetPen(selected ? UI.SelectColor : BLACK);
+    int gateCenter = r_GfxInfo.x1 + (UI.AND2_Width / 2);
+    int textWidth = label.length() * 8;
+    int labelX = gateCenter - (textWidth / 2);
+    int labelY = r_GfxInfo.y1 + UI.AND2_Height + 5;
+    pWind->DrawString(labelX, labelY, label);
+  }
 }
 
-void Output::DrawAND3(GraphicsInfo r_GfxInfo, bool selected) const {
+void Output::DrawAND3(GraphicsInfo r_GfxInfo, bool selected,
+                      string label) const {
   string GateImage;
   if (selected)
     GateImage = "Images\\Gates\\AND3_hi.jpg";
@@ -295,9 +385,21 @@ void Output::DrawAND3(GraphicsInfo r_GfxInfo, bool selected) const {
 
   pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.AND2_Width,
                    UI.AND2_Height);
+
+  // Draw label below the gate if it exists
+  if (label != "") {
+    pWind->SetFont(16, PLAIN, BY_NAME, "Fixedsys");
+    pWind->SetPen(selected ? UI.SelectColor : BLACK);
+    int gateCenter = r_GfxInfo.x1 + (UI.AND2_Width / 2);
+    int textWidth = label.length() * 8;
+    int labelX = gateCenter - (textWidth / 2);
+    int labelY = r_GfxInfo.y1 + UI.AND2_Height + 5;
+    pWind->DrawString(labelX, labelY, label);
+  }
 }
 
-void Output::DrawNOR3(GraphicsInfo r_GfxInfo, bool selected) const {
+void Output::DrawNOR3(GraphicsInfo r_GfxInfo, bool selected,
+                      string label) const {
   string GateImage;
   if (selected)
     GateImage = "Images\\Gates\\NOR3_hi.jpg";
@@ -306,9 +408,21 @@ void Output::DrawNOR3(GraphicsInfo r_GfxInfo, bool selected) const {
 
   pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.AND2_Width,
                    UI.AND2_Height);
+
+  // Draw label below the gate if it exists
+  if (label != "") {
+    pWind->SetFont(16, PLAIN, BY_NAME, "Fixedsys");
+    pWind->SetPen(selected ? UI.SelectColor : BLACK);
+    int gateCenter = r_GfxInfo.x1 + (UI.AND2_Width / 2);
+    int textWidth = label.length() * 8;
+    int labelX = gateCenter - (textWidth / 2);
+    int labelY = r_GfxInfo.y1 + UI.AND2_Height + 5;
+    pWind->DrawString(labelX, labelY, label);
+  }
 }
 
-void Output::DrawXOR3(GraphicsInfo r_GfxInfo, bool selected) const {
+void Output::DrawXOR3(GraphicsInfo r_GfxInfo, bool selected,
+                      string label) const {
   string GateImage;
   if (selected)
     GateImage = "Images\\Gates\\XOR3_hi.jpg";
@@ -317,9 +431,21 @@ void Output::DrawXOR3(GraphicsInfo r_GfxInfo, bool selected) const {
 
   pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.AND2_Width,
                    UI.AND2_Height);
+
+  // Draw label below the gate if it exists
+  if (label != "") {
+    pWind->SetFont(16, PLAIN, BY_NAME, "Fixedsys");
+    pWind->SetPen(selected ? UI.SelectColor : BLACK);
+    int gateCenter = r_GfxInfo.x1 + (UI.AND2_Width / 2);
+    int textWidth = label.length() * 8;
+    int labelX = gateCenter - (textWidth / 2);
+    int labelY = r_GfxInfo.y1 + UI.AND2_Height + 5;
+    pWind->DrawString(labelX, labelY, label);
+  }
 }
 
-void Output::DrawSWITCH(GraphicsInfo r_GfxInfo, bool selected) const {
+void Output::DrawSWITCH(GraphicsInfo r_GfxInfo, bool selected,
+                        string label) const {
   string GateImage;
   if (selected)
     GateImage = "Images\\Gates\\SWT_hi.jpg";
@@ -328,9 +454,21 @@ void Output::DrawSWITCH(GraphicsInfo r_GfxInfo, bool selected) const {
 
   pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.AND2_Width,
                    UI.AND2_Height);
+
+  // Draw label below the gate if it exists
+  if (label != "") {
+    pWind->SetFont(16, PLAIN, BY_NAME, "Fixedsys");
+    pWind->SetPen(selected ? UI.SelectColor : BLACK);
+    int gateCenter = r_GfxInfo.x1 + (UI.AND2_Width / 2);
+    int textWidth = label.length() * 8;
+    int labelX = gateCenter - (textWidth / 2);
+    int labelY = r_GfxInfo.y1 + UI.AND2_Height + 5;
+    pWind->DrawString(labelX, labelY, label);
+  }
 }
 
-void Output::DrawLED(GraphicsInfo r_GfxInfo, bool selected) const {
+void Output::DrawLED(GraphicsInfo r_GfxInfo, bool selected,
+                     string label) const {
   string GateImage;
   if (selected)
     GateImage = "Images\\Gates\\BLB_hi.jpg";
@@ -339,6 +477,17 @@ void Output::DrawLED(GraphicsInfo r_GfxInfo, bool selected) const {
 
   pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.AND2_Width,
                    UI.AND2_Height);
+
+  // Draw label below the gate if it exists
+  if (label != "") {
+    pWind->SetFont(16, PLAIN, BY_NAME, "Fixedsys");
+    pWind->SetPen(selected ? UI.SelectColor : BLACK);
+    int gateCenter = r_GfxInfo.x1 + (UI.AND2_Width / 2);
+    int textWidth = label.length() * 8;
+    int labelX = gateCenter - (textWidth / 2);
+    int labelY = r_GfxInfo.y1 + UI.AND2_Height + 5;
+    pWind->DrawString(labelX, labelY, label);
+  }
 }
 
 void Output::DrawConnection(GraphicsInfo r_GfxInfo, bool selected,

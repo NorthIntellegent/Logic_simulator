@@ -22,7 +22,7 @@ void INVERTER::Operate()
 void INVERTER::Draw(Output* pOut)
 {
 	//Call output class and pass gate drawing info to it.
-	pOut->DrawINVERTER(m_GfxInfo);
+	pOut->DrawINVERTER(m_GfxInfo, IsSelected(), GetLabel());
 }
 
 //returns status of outputpin
