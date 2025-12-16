@@ -38,6 +38,12 @@ void AddConnection::ReadActionParameters() {
     return;
   }
 
+  // Check if source and destination are the same component (self-connection)
+  if (pSrcComp == pDstComp) {
+    pOut->PrintMsg("Error: Cannot connect a component to itself!");
+    return;
+  }
+
   // Step 3: For multi-input gates, ask for pin number
   Gate *pDstGate = dynamic_cast<Gate *>(pDstComp);
   if (pDstGate) {
@@ -122,6 +128,13 @@ void AddConnection::Execute() {
   if (!pDstPin) {
     pManager->GetOutput()->PrintMsg(
         "Error: Destination component has no input pin!");
+    return;
+  }
+
+  // Check if source output pin already has a connection
+  if (pSrcPin->getConnectionCount() > 0) {
+    pManager->GetOutput()->PrintMsg(
+        "Error: Source component is already connected to another component!");
     return;
   }
 
