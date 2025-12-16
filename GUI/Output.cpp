@@ -33,7 +33,7 @@ Input *Output::CreateInput() const {
 
 //======================================================================================//
 //								Interface
-//Functions
+// Functions
 ////
 //======================================================================================//
 
@@ -117,6 +117,7 @@ void Output::CreateDesignToolBar() const {
   MenuItemImages[ITM_INVERTER] = "images\\Menu\\INV.jpg";
   MenuItemImages[ITM_SWITCH] = "images\\Menu\\SWT.jpg";
   MenuItemImages[ITM_LED] = "images\\Menu\\BLB.jpg";
+  MenuItemImages[ITM_CONNECTION] = "images\\Menu\\Menu_Connection.jpg";
 
   MenuItemImages[ITM_LABEL] = "images\\Menu\\ITM_LABEL.jpg";
   MenuItemImages[ITM_EDIT] = "images\\Menu\\ITM_EDIT.jpg";
@@ -126,7 +127,6 @@ void Output::CreateDesignToolBar() const {
   MenuItemImages[ITM_SWITCH_SIM] = "images\\Menu\\S.jpg";
 
   MenuItemImages[ITM_EXIT] = "images\\Menu\\Menu_Exit.jpg";
-
 
   // Draw menu item one image at a time
   // Use consistent icon size for all toolbar items (40x40 to fit in 45px slots)
@@ -169,7 +169,7 @@ void Output::CreateSimulationToolBar() const {
   MenuItemImages[ITM_CHK] = "images\\Menu\\CHK.jpg";
   MenuItemImages[ITM_CRCK] = "images\\Menu\\CRCK.jpg";
   MenuItemImages[ITM_BAK] = "images\\Menu\\BAK.jpg";
-  
+
   // Use consistent icon size for all toolbar items (40x40 to fit in 45px slots)
   int iconW = 40;
   int iconH = 40;
@@ -188,7 +188,7 @@ void Output::CreateSimulationToolBar() const {
 
 //======================================================================================//
 //								Components
-//Drawing Functions							//
+// Drawing Functions							//
 //======================================================================================//
 
 void Output::DrawAND2(GraphicsInfo r_GfxInfo, bool selected,
@@ -496,7 +496,7 @@ void Output::DrawConnection(GraphicsInfo r_GfxInfo, bool selected,
   if (selected) {
     pWind->SetPen(UI.SelectColor, 3);
   } else {
-    pWind->SetPen(UI.ConnColor, 2);
+    pWind->SetPen(BLACK, 2); // Black color for connections
   }
 
   // Draw connection (orthogonal)

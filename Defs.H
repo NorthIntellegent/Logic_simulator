@@ -61,19 +61,20 @@ enum DsgnMenuItem // The items of the design menu (you should add more items)
 {
   // Note: Items are ordered here as they appear in menu
   // If you want to change the menu items order, change the order here
-  ITM_AND2,     // AND gate item in menu
-  ITM_AND3,     // 3-input AND gate item in menu
-  ITM_OR2,      // OR gate item in menu
-  ITM_NAND2,    // NAND gate item in menu
-  ITM_NOR2,     // NOR gate item in menu
-  ITM_NOR3,     // 3-input NOR gate item in menu
-  ITM_XOR2,     // XOR gate item in menu
-  ITM_XOR3,     // 3-input XOR gate item in menu
-  ITM_XNOR2,    // XNOR gate item in menu
-  ITM_BUFFER,   // Buffer gate item in menu
-  ITM_INVERTER, // Inverter gate item in menu
-  ITM_SWITCH,   // Switch item in menu
-  ITM_LED,      // LED item in menu
+  ITM_AND2,       // AND gate item in menu
+  ITM_AND3,       // 3-input AND gate item in menu
+  ITM_OR2,        // OR gate item in menu
+  ITM_NAND2,      // NAND gate item in menu
+  ITM_NOR2,       // NOR gate item in menu
+  ITM_NOR3,       // 3-input NOR gate item in menu
+  ITM_XOR2,       // XOR gate item in menu
+  ITM_XOR3,       // 3-input XOR gate item in menu
+  ITM_XNOR2,      // XNOR gate item in menu
+  ITM_BUFFER,     // Buffer gate item in menu
+  ITM_INVERTER,   // Inverter gate item in menu
+  ITM_SWITCH,     // Switch item in menu
+  ITM_LED,        // LED item in menu
+  ITM_CONNECTION, // Connection item in menu
 
   ITM_LABEL,
   ITM_EDIT,

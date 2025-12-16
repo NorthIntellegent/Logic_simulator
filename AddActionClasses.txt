@@ -1,0 +1,1111 @@
+================================================================================
+                    LOGIC SIMULATOR - ADD ACTION CLASSES
+                    All "Add Component" Action Source Files
+================================================================================
+
+
+================================================================================
+                              2-INPUT GATES
+================================================================================
+
+================================================================================
+== AddANDgate2.h
+================================================================================
+#ifndef _ADD_AND_GATE_H
+#define _ADD_AND_GATE_H
+
+#include "action.h"
+#include "..\Components\AND2.h"
+
+class AddANDgate2 :	public Action
+{
+private:
+	//Parameters for rectangular area to be occupied by the gate
+	int Cx, Cy;	//Center point of the gate
+	int x1, y1, x2, y2;	//Two corners of the rectangluar area
+public:
+	AddANDgate2(ApplicationManager *pApp);
+	virtual ~AddANDgate2(void);
+
+	//Reads parameters required for action to execute
+	virtual void ReadActionParameters();
+	//Execute action (code depends on action type)
+	virtual void Execute();
+
+	virtual void Undo();
+	virtual void Redo();
+
+
+};
+
+#endif
+
+
+================================================================================
+== AddANDgate2.cpp
+================================================================================
+#include "AddANDgate2.h"
+#include "..\ApplicationManager.h"
+
+AddANDgate2::AddANDgate2(ApplicationManager *pApp):Action(pApp)
+{
+}
+
+AddANDgate2::~AddANDgate2(void)
+{
+}
+
+void AddANDgate2::ReadActionParameters()
+{
+	//Get a Pointer to the Input / Output Interfaces
+	Output* pOut = pManager->GetOutput();
+	Input* pIn = pManager->GetInput();
+
+	//Print Action Message
+	pOut->PrintMsg("2-Input AND Gate: Click to add the gate");
+
+	//Wait for User Input
+	pIn->GetPointClicked(Cx, Cy);
+
+	//Clear Status Bar
+	pOut->ClearStatusBar();
+	
+}
+
+void AddANDgate2::Execute()
+{
+	//Get Center point of the Gate
+	ReadActionParameters();
+	
+	//Calculate the rectangle Corners
+	int Len = UI.AND2_Width;
+	int Wdth = UI.AND2_Height;
+	
+	GraphicsInfo GInfo; //Gfx info to be used to construct the AND2 gate
+	
+	GInfo.x1 = Cx - Len/2;
+	GInfo.x2 = Cx + Len/2;
+	GInfo.y1 = Cy - Wdth/2;
+	GInfo.y2 = Cy + Wdth/2;
+	AND2 *pA=new AND2(GInfo, AND2_FANOUT); 
+	pManager->AddComponent(pA);
+}
+
+void AddANDgate2::Undo()
+{}
+
+void AddANDgate2::Redo()
+{}
+
+
+================================================================================
+== AddORgate2.h
+================================================================================
+#ifndef _ADD_OR_GATE2_H
+#define _ADD_OR_GATE2_H
+
+#include "action.h"
+#include "..\Components\OR2.h"
+
+class AddORgate2 :	public Action
+{
+private:
+	//Parameters for rectangular area to be occupied by the gate
+	int Cx, Cy;	//Center point of the gate
+	int x1, y1, x2, y2;	//Two corners of the rectangluar area
+public:
+	AddORgate2(ApplicationManager *pApp);
+	virtual ~AddORgate2(void);
+
+	//Reads parameters required for action to execute
+	virtual void ReadActionParameters();
+	//Execute action (code depends on action type)
+	virtual void Execute();
+
+	virtual void Undo();
+	virtual void Redo();
+
+};
+
+#endif
+
+
+================================================================================
+== AddORgate2.cpp
+================================================================================
+#include "AddORgate2.h"
+#include "..\ApplicationManager.h"
+
+AddORgate2::AddORgate2(ApplicationManager *pApp):Action(pApp)
+{
+}
+
+AddORgate2::~AddORgate2(void)
+{
+}
+
+void AddORgate2::ReadActionParameters()
+{
+	//Get a Pointer to the Input / Output Interfaces
+	Output* pOut = pManager->GetOutput();
+	Input* pIn = pManager->GetInput();
+
+	//Print Action Message
+	pOut->PrintMsg("2-Input OR Gate: Click to add the gate");
+
+	//Wait for User Input
+	pIn->GetPointClicked(Cx, Cy);
+
+	//Clear Status Bar
+	pOut->ClearStatusBar();
+	
+}
+
+void AddORgate2::Execute()
+{
+	//Get Center point of the Gate
+	ReadActionParameters();
+	
+	//Calculate the rectangle Corners
+	int Len = UI.OR2_Width;
+	int Wdth = UI.OR2_Height;
+	
+	GraphicsInfo GInfo; //Gfx info to be used to construct the OR2 gate
+	
+	GInfo.x1 = Cx - Len/2;
+	GInfo.x2 = Cx + Len/2;
+	GInfo.y1 = Cy - Wdth/2;
+	GInfo.y2 = Cy + Wdth/2;
+	OR2 *pA=new OR2(GInfo, OR2_FANOUT); 
+	pManager->AddComponent(pA);
+}
+
+void AddORgate2::Undo()
+{}
+
+void AddORgate2::Redo()
+{}
+
+
+================================================================================
+== AddNANDgate2.h
+================================================================================
+#ifndef _ADD_NAND_GATE2_H
+#define _ADD_NAND_GATE2_H
+
+#include "action.h"
+#include "..\Components\NAND2.h"
+
+class AddNANDgate2 :	public Action
+{
+private:
+	//Parameters for rectangular area to be occupied by the gate
+	int Cx, Cy;	//Center point of the gate
+	int x1, y1, x2, y2;	//Two corners of the rectangluar area
+public:
+	AddNANDgate2(ApplicationManager *pApp);
+	virtual ~AddNANDgate2(void);
+
+	//Reads parameters required for action to execute
+	virtual void ReadActionParameters();
+	//Execute action (code depends on action type)
+	virtual void Execute();
+
+	virtual void Undo();
+	virtual void Redo();
+
+};
+
+#endif
+
+
+================================================================================
+== AddNANDgate2.cpp
+================================================================================
+#include "AddNANDgate2.h"
+#include "..\ApplicationManager.h"
+
+AddNANDgate2::AddNANDgate2(ApplicationManager *pApp):Action(pApp)
+{
+}
+
+AddNANDgate2::~AddNANDgate2(void)
+{
+}
+
+void AddNANDgate2::ReadActionParameters()
+{
+	//Get a Pointer to the Input / Output Interfaces
+	Output* pOut = pManager->GetOutput();
+	Input* pIn = pManager->GetInput();
+
+	//Print Action Message
+	pOut->PrintMsg("2-Input NAND Gate: Click to add the gate");
+
+	//Wait for User Input
+	pIn->GetPointClicked(Cx, Cy);
+
+	//Clear Status Bar
+	pOut->ClearStatusBar();
+	
+}
+
+void AddNANDgate2::Execute()
+{
+	//Get Center point of the Gate
+	ReadActionParameters();
+	
+	//Calculate the rectangle Corners
+	int Len = UI.NAND2_Width;
+	int Wdth = UI.NAND2_Height;
+	
+	GraphicsInfo GInfo; //Gfx info to be used to construct the NAND2 gate
+	
+	GInfo.x1 = Cx - Len/2;
+	GInfo.x2 = Cx + Len/2;
+	GInfo.y1 = Cy - Wdth/2;
+	GInfo.y2 = Cy + Wdth/2;
+	NAND2 *pA=new NAND2(GInfo, NAND2_FANOUT); 
+	pManager->AddComponent(pA);
+}
+
+void AddNANDgate2::Undo()
+{}
+
+void AddNANDgate2::Redo()
+{}
+
+
+================================================================================
+== AddNORgate2.h
+================================================================================
+#ifndef _ADD_NOR_GATE2_H
+#define _ADD_NOR_GATE2_H
+
+#include "action.h"
+#include "..\Components\NOR2.h"
+
+class AddNORgate2 :	public Action
+{
+private:
+	//Parameters for rectangular area to be occupied by the gate
+	int Cx, Cy;	//Center point of the gate
+	int x1, y1, x2, y2;	//Two corners of the rectangluar area
+public:
+	AddNORgate2(ApplicationManager *pApp);
+	virtual ~AddNORgate2(void);
+
+	//Reads parameters required for action to execute
+	virtual void ReadActionParameters();
+	//Execute action (code depends on action type)
+	virtual void Execute();
+
+	virtual void Undo();
+	virtual void Redo();
+
+};
+
+#endif
+
+
+================================================================================
+== AddNORgate2.cpp
+================================================================================
+#include "AddNORgate2.h"
+#include "..\ApplicationManager.h"
+
+AddNORgate2::AddNORgate2(ApplicationManager *pApp):Action(pApp)
+{
+}
+
+AddNORgate2::~AddNORgate2(void)
+{
+}
+
+void AddNORgate2::ReadActionParameters()
+{
+	//Get a Pointer to the Input / Output Interfaces
+	Output* pOut = pManager->GetOutput();
+	Input* pIn = pManager->GetInput();
+
+	//Print Action Message
+	pOut->PrintMsg("2-Input NOR Gate: Click to add the gate");
+
+	//Wait for User Input
+	pIn->GetPointClicked(Cx, Cy);
+
+	//Clear Status Bar
+	pOut->ClearStatusBar();
+	
+}
+
+void AddNORgate2::Execute()
+{
+	//Get Center point of the Gate
+	ReadActionParameters();
+	
+	//Calculate the rectangle Corners
+	int Len = UI.NOR2_Width;
+	int Wdth = UI.NOR2_Height;
+	
+	GraphicsInfo GInfo; //Gfx info to be used to construct the NOR2 gate
+	
+	GInfo.x1 = Cx - Len/2;
+	GInfo.x2 = Cx + Len/2;
+	GInfo.y1 = Cy - Wdth/2;
+	GInfo.y2 = Cy + Wdth/2;
+	NOR2 *pA=new NOR2(GInfo, NOR2_FANOUT); 
+	pManager->AddComponent(pA);
+}
+
+void AddNORgate2::Undo()
+{}
+
+void AddNORgate2::Redo()
+{}
+
+
+================================================================================
+== AddXORgate2.h
+================================================================================
+#ifndef _ADD_XOR_GATE2_H
+#define _ADD_XOR_GATE2_H
+
+#include "action.h"
+#include "..\Components\XOR2.h"
+
+class AddXORgate2 :	public Action
+{
+private:
+	//Parameters for rectangular area to be occupied by the gate
+	int Cx, Cy;	//Center point of the gate
+	int x1, y1, x2, y2;	//Two corners of the rectangluar area
+public:
+	AddXORgate2(ApplicationManager *pApp);
+	virtual ~AddXORgate2(void);
+
+	//Reads parameters required for action to execute
+	virtual void ReadActionParameters();
+	//Execute action (code depends on action type)
+	virtual void Execute();
+
+	virtual void Undo();
+	virtual void Redo();
+
+};
+
+#endif
+
+
+================================================================================
+== AddXORgate2.cpp
+================================================================================
+#include "AddXORgate2.h"
+#include "..\ApplicationManager.h"
+
+AddXORgate2::AddXORgate2(ApplicationManager *pApp):Action(pApp)
+{
+}
+
+AddXORgate2::~AddXORgate2(void)
+{
+}
+
+void AddXORgate2::ReadActionParameters()
+{
+	//Get a Pointer to the Input / Output Interfaces
+	Output* pOut = pManager->GetOutput();
+	Input* pIn = pManager->GetInput();
+
+	//Print Action Message
+	pOut->PrintMsg("2-Input XOR Gate: Click to add the gate");
+
+	//Wait for User Input
+	pIn->GetPointClicked(Cx, Cy);
+
+	//Clear Status Bar
+	pOut->ClearStatusBar();
+	
+}
+
+void AddXORgate2::Execute()
+{
+	//Get Center point of the Gate
+	ReadActionParameters();
+	
+	//Calculate the rectangle Corners
+	int Len = UI.XOR2_Width;
+	int Wdth = UI.XOR2_Height;
+	
+	GraphicsInfo GInfo; //Gfx info to be used to construct the XOR2 gate
+	
+	GInfo.x1 = Cx - Len/2;
+	GInfo.x2 = Cx + Len/2;
+	GInfo.y1 = Cy - Wdth/2;
+	GInfo.y2 = Cy + Wdth/2;
+	XOR2 *pA=new XOR2(GInfo, XOR2_FANOUT); 
+	pManager->AddComponent(pA);
+}
+
+void AddXORgate2::Undo()
+{}
+
+void AddXORgate2::Redo()
+{}
+
+
+================================================================================
+== AddXNORgate2.h
+================================================================================
+#ifndef _ADD_XNOR_GATE2_H
+#define _ADD_XNOR_GATE2_H
+
+#include "action.h"
+#include "..\Components\XNOR2.h"
+
+class AddXNORgate2 :	public Action
+{
+private:
+	//Parameters for rectangular area to be occupied by the gate
+	int Cx, Cy;	//Center point of the gate
+	int x1, y1, x2, y2;	//Two corners of the rectangluar area
+public:
+	AddXNORgate2(ApplicationManager *pApp);
+	virtual ~AddXNORgate2(void);
+
+	//Reads parameters required for action to execute
+	virtual void ReadActionParameters();
+	//Execute action (code depends on action type)
+	virtual void Execute();
+
+	virtual void Undo();
+	virtual void Redo();
+
+};
+
+#endif
+
+
+================================================================================
+== AddXNORgate2.cpp
+================================================================================
+#include "AddXNORgate2.h"
+#include "..\ApplicationManager.h"
+
+AddXNORgate2::AddXNORgate2(ApplicationManager *pApp):Action(pApp)
+{
+}
+
+AddXNORgate2::~AddXNORgate2(void)
+{
+}
+
+void AddXNORgate2::ReadActionParameters()
+{
+	//Get a Pointer to the Input / Output Interfaces
+	Output* pOut = pManager->GetOutput();
+	Input* pIn = pManager->GetInput();
+
+	//Print Action Message
+	pOut->PrintMsg("2-Input XNOR Gate: Click to add the gate");
+
+	//Wait for User Input
+	pIn->GetPointClicked(Cx, Cy);
+
+	//Clear Status Bar
+	pOut->ClearStatusBar();
+	
+}
+
+void AddXNORgate2::Execute()
+{
+	//Get Center point of the Gate
+	ReadActionParameters();
+	
+	//Calculate the rectangle Corners
+	int Len = UI.XNOR2_Width;
+	int Wdth = UI.XNOR2_Height;
+	
+	GraphicsInfo GInfo; //Gfx info to be used to construct the XNOR2 gate
+	
+	GInfo.x1 = Cx - Len/2;
+	GInfo.x2 = Cx + Len/2;
+	GInfo.y1 = Cy - Wdth/2;
+	GInfo.y2 = Cy + Wdth/2;
+	XNOR2 *pA=new XNOR2(GInfo, XNOR2_FANOUT); 
+	pManager->AddComponent(pA);
+}
+
+void AddXNORgate2::Undo()
+{}
+
+void AddXNORgate2::Redo()
+{}
+
+
+================================================================================
+                              3-INPUT GATES
+================================================================================
+
+================================================================================
+== AddANDgate3.h
+================================================================================
+#ifndef _ADD_AND_GATE3_H
+#define _ADD_AND_GATE3_H
+
+#include "action.h"
+#include "..\Components\AND3.h"
+
+class AddANDgate3 :	public Action
+{
+private:
+	//Parameters for rectangular area to be occupied by the gate
+	int Cx, Cy;	//Center point of the gate
+	int x1, y1, x2, y2;	//Two corners of the rectangluar area
+public:
+	AddANDgate3(ApplicationManager *pApp);
+	virtual ~AddANDgate3(void);
+
+	//Reads parameters required for action to execute
+	virtual void ReadActionParameters();
+	//Execute action (code depends on action type)
+	virtual void Execute();
+
+	virtual void Undo();
+	virtual void Redo();
+
+};
+
+#endif
+
+
+================================================================================
+== AddANDgate3.cpp
+================================================================================
+#include "AddANDgate3.h"
+#include "..\ApplicationManager.h"
+
+AddANDgate3::AddANDgate3(ApplicationManager *pApp):Action(pApp)
+{
+}
+
+AddANDgate3::~AddANDgate3(void)
+{
+}
+
+void AddANDgate3::ReadActionParameters()
+{
+	//Get a Pointer to the Input / Output Interfaces
+	Output* pOut = pManager->GetOutput();
+	Input* pIn = pManager->GetInput();
+
+	//Print Action Message
+	pOut->PrintMsg("3-Input AND Gate: Click to add the gate");
+
+	//Wait for User Input
+	pIn->GetPointClicked(Cx, Cy);
+
+	//Clear Status Bar
+	pOut->ClearStatusBar();
+	
+}
+
+void AddANDgate3::Execute()
+{
+	//Get Center point of the Gate
+	ReadActionParameters();
+	
+	//Calculate the rectangle Corners
+	int Len = UI.AND3_Width;
+	int Wdth = UI.AND3_Height;
+	
+	GraphicsInfo GInfo; //Gfx info to be used to construct the AND3 gate
+	
+	GInfo.x1 = Cx - Len/2;
+	GInfo.x2 = Cx + Len/2;
+	GInfo.y1 = Cy - Wdth/2;
+	GInfo.y2 = Cy + Wdth/2;
+	AND3 *pA=new AND3(GInfo, AND3_FANOUT); 
+	pManager->AddComponent(pA);
+}
+
+void AddANDgate3::Undo()
+{}
+
+void AddANDgate3::Redo()
+{}
+
+
+================================================================================
+== AddNORgate3.h
+================================================================================
+#ifndef _ADD_NOR_GATE3_H
+#define _ADD_NOR_GATE3_H
+
+#include "action.h"
+#include "..\Components\NOR3.h"
+
+class AddNORgate3 :	public Action
+{
+private:
+	int Cx, Cy;
+	int x1, y1, x2, y2;
+public:
+	AddNORgate3(ApplicationManager *pApp);
+	virtual ~AddNORgate3(void);
+
+	virtual void ReadActionParameters();
+	virtual void Execute();
+
+	virtual void Undo();
+	virtual void Redo();
+
+};
+
+#endif
+
+
+================================================================================
+== AddNORgate3.cpp
+================================================================================
+#include "AddNORgate3.h"
+#include "..\ApplicationManager.h"
+
+AddNORgate3::AddNORgate3(ApplicationManager *pApp):Action(pApp)
+{
+}
+
+AddNORgate3::~AddNORgate3(void)
+{
+}
+
+void AddNORgate3::ReadActionParameters()
+{
+	Output* pOut = pManager->GetOutput();
+	Input* pIn = pManager->GetInput();
+
+	pOut->PrintMsg("3-Input NOR Gate: Click to add the gate");
+	pIn->GetPointClicked(Cx, Cy);
+	pOut->ClearStatusBar();
+}
+
+void AddNORgate3::Execute()
+{
+	ReadActionParameters();
+	
+	int Len = UI.NOR3_Width;
+	int Wdth = UI.NOR3_Height;
+	
+	GraphicsInfo GInfo;
+	
+	GInfo.x1 = Cx - Len/2;
+	GInfo.x2 = Cx + Len/2;
+	GInfo.y1 = Cy - Wdth/2;
+	GInfo.y2 = Cy + Wdth/2;
+	NOR3 *pA=new NOR3(GInfo, NOR3_FANOUT); 
+	pManager->AddComponent(pA);
+}
+
+void AddNORgate3::Undo()
+{}
+
+void AddNORgate3::Redo()
+{}
+
+
+================================================================================
+== AddXORgate3.h
+================================================================================
+#ifndef _ADD_XOR_GATE3_H
+#define _ADD_XOR_GATE3_H
+
+#include "action.h"
+#include "..\Components\XOR3.h"
+
+class AddXORgate3 :	public Action
+{
+private:
+	int Cx, Cy;
+	int x1, y1, x2, y2;
+public:
+	AddXORgate3(ApplicationManager *pApp);
+	virtual ~AddXORgate3(void);
+
+	virtual void ReadActionParameters();
+	virtual void Execute();
+
+	virtual void Undo();
+	virtual void Redo();
+
+};
+
+#endif
+
+
+================================================================================
+== AddXORgate3.cpp
+================================================================================
+#include "AddXORgate3.h"
+#include "..\ApplicationManager.h"
+
+AddXORgate3::AddXORgate3(ApplicationManager *pApp):Action(pApp)
+{
+}
+
+AddXORgate3::~AddXORgate3(void)
+{
+}
+
+void AddXORgate3::ReadActionParameters()
+{
+	Output* pOut = pManager->GetOutput();
+	Input* pIn = pManager->GetInput();
+
+	pOut->PrintMsg("3-Input XOR Gate: Click to add the gate");
+	pIn->GetPointClicked(Cx, Cy);
+	pOut->ClearStatusBar();
+}
+
+void AddXORgate3::Execute()
+{
+	ReadActionParameters();
+	
+	int Len = UI.XOR3_Width;
+	int Wdth = UI.XOR3_Height;
+	
+	GraphicsInfo GInfo;
+	
+	GInfo.x1 = Cx - Len/2;
+	GInfo.x2 = Cx + Len/2;
+	GInfo.y1 = Cy - Wdth/2;
+	GInfo.y2 = Cy + Wdth/2;
+	XOR3 *pA=new XOR3(GInfo, XOR3_FANOUT); 
+	pManager->AddComponent(pA);
+}
+
+void AddXORgate3::Undo()
+{}
+
+void AddXORgate3::Redo()
+{}
+
+
+================================================================================
+                         1-INPUT GATES (Buffer/Inverter)
+================================================================================
+
+================================================================================
+== AddBuffer.h
+================================================================================
+#ifndef _ADD_BUFFER_H
+#define _ADD_BUFFER_H
+
+#include "action.h"
+#include "..\Components\BUFFER.h"
+
+class AddBuffer :	public Action
+{
+private:
+	int Cx, Cy;
+	int x1, y1, x2, y2;
+public:
+	AddBuffer(ApplicationManager *pApp);
+	virtual ~AddBuffer(void);
+
+	virtual void ReadActionParameters();
+	virtual void Execute();
+
+	virtual void Undo();
+	virtual void Redo();
+
+};
+
+#endif
+
+
+================================================================================
+== AddBuffer.cpp
+================================================================================
+#include "AddBuffer.h"
+#include "..\ApplicationManager.h"
+
+AddBuffer::AddBuffer(ApplicationManager *pApp):Action(pApp)
+{
+}
+
+AddBuffer::~AddBuffer(void)
+{
+}
+
+void AddBuffer::ReadActionParameters()
+{
+	Output* pOut = pManager->GetOutput();
+	Input* pIn = pManager->GetInput();
+
+	pOut->PrintMsg("Buffer: Click to add the buffer");
+	pIn->GetPointClicked(Cx, Cy);
+	pOut->ClearStatusBar();
+}
+
+void AddBuffer::Execute()
+{
+	ReadActionParameters();
+	
+	int Len = UI.BUFFER_Width;
+	int Wdth = UI.BUFFER_Height;
+	
+	GraphicsInfo GInfo;
+	
+	GInfo.x1 = Cx - Len/2;
+	GInfo.x2 = Cx + Len/2;
+	GInfo.y1 = Cy - Wdth/2;
+	GInfo.y2 = Cy + Wdth/2;
+	BUFFER *pA=new BUFFER(GInfo, BUFFER_FANOUT); 
+	pManager->AddComponent(pA);
+}
+
+void AddBuffer::Undo()
+{}
+
+void AddBuffer::Redo()
+{}
+
+
+================================================================================
+== AddInverter.h
+================================================================================
+#ifndef _ADD_INVERTER_H
+#define _ADD_INVERTER_H
+
+#include "action.h"
+#include "..\Components\INVERTER.h"
+
+class AddInverter :	public Action
+{
+private:
+	int Cx, Cy;
+	int x1, y1, x2, y2;
+public:
+	AddInverter(ApplicationManager *pApp);
+	virtual ~AddInverter(void);
+
+	virtual void ReadActionParameters();
+	virtual void Execute();
+
+	virtual void Undo();
+	virtual void Redo();
+
+};
+
+#endif
+
+
+================================================================================
+== AddInverter.cpp
+================================================================================
+#include "AddInverter.h"
+#include "..\ApplicationManager.h"
+
+AddInverter::AddInverter(ApplicationManager *pApp):Action(pApp)
+{
+}
+
+AddInverter::~AddInverter(void)
+{
+}
+
+void AddInverter::ReadActionParameters()
+{
+	Output* pOut = pManager->GetOutput();
+	Input* pIn = pManager->GetInput();
+
+	pOut->PrintMsg("Inverter: Click to add the inverter");
+	pIn->GetPointClicked(Cx, Cy);
+	pOut->ClearStatusBar();
+}
+
+void AddInverter::Execute()
+{
+	ReadActionParameters();
+	
+	int Len = UI.INVERTER_Width;
+	int Wdth = UI.INVERTER_Height;
+	
+	GraphicsInfo GInfo;
+	
+	GInfo.x1 = Cx - Len/2;
+	GInfo.x2 = Cx + Len/2;
+	GInfo.y1 = Cy - Wdth/2;
+	GInfo.y2 = Cy + Wdth/2;
+	INVERTER *pA=new INVERTER(GInfo, INVERTER_FANOUT); 
+	pManager->AddComponent(pA);
+}
+
+void AddInverter::Undo()
+{}
+
+void AddInverter::Redo()
+{}
+
+
+================================================================================
+                         I/O COMPONENTS (Switch/LED)
+================================================================================
+
+================================================================================
+== AddSwitch.h
+================================================================================
+#ifndef _ADD_SWITCH_H
+#define _ADD_SWITCH_H
+
+#include "action.h"
+#include "..\Components\SWITCH.h"
+
+class AddSwitch :	public Action
+{
+private:
+	int Cx, Cy;
+	int x1, y1, x2, y2;
+public:
+	AddSwitch(ApplicationManager *pApp);
+	virtual ~AddSwitch(void);
+
+	virtual void ReadActionParameters();
+	virtual void Execute();
+
+	virtual void Undo();
+	virtual void Redo();
+
+};
+
+#endif
+
+
+================================================================================
+== AddSwitch.cpp
+================================================================================
+#include "AddSwitch.h"
+#include "..\ApplicationManager.h"
+
+AddSwitch::AddSwitch(ApplicationManager *pApp):Action(pApp)
+{
+}
+
+AddSwitch::~AddSwitch(void)
+{
+}
+
+void AddSwitch::ReadActionParameters()
+{
+	Output* pOut = pManager->GetOutput();
+	Input* pIn = pManager->GetInput();
+
+	pOut->PrintMsg("Switch: Click to add the switch");
+	pIn->GetPointClicked(Cx, Cy);
+	pOut->ClearStatusBar();
+}
+
+void AddSwitch::Execute()
+{
+	ReadActionParameters();
+	
+	int Len = UI.SWITCH_Width;
+	int Wdth = UI.SWITCH_Height;
+	
+	GraphicsInfo GInfo;
+	
+	GInfo.x1 = Cx - Len/2;
+	GInfo.x2 = Cx + Len/2;
+	GInfo.y1 = Cy - Wdth/2;
+	GInfo.y2 = Cy + Wdth/2;
+	SWITCH *pA=new SWITCH(GInfo, SWITCH_FANOUT); 
+	pManager->AddComponent(pA);
+}
+
+void AddSwitch::Undo()
+{}
+
+void AddSwitch::Redo()
+{}
+
+
+================================================================================
+== AddLED.h
+================================================================================
+#ifndef _ADD_LED_H
+#define _ADD_LED_H
+
+#include "action.h"
+#include "..\Components\LED.h"
+
+class AddLED :	public Action
+{
+private:
+	int Cx, Cy;
+	int x1, y1, x2, y2;
+public:
+	AddLED(ApplicationManager *pApp);
+	virtual ~AddLED(void);
+
+	virtual void ReadActionParameters();
+	virtual void Execute();
+
+	virtual void Undo();
+	virtual void Redo();
+
+};
+
+#endif
+
+
+================================================================================
+== AddLED.cpp
+================================================================================
+#include "AddLED.h"
+#include "..\ApplicationManager.h"
+
+AddLED::AddLED(ApplicationManager *pApp):Action(pApp)
+{
+}
+
+AddLED::~AddLED(void)
+{
+}
+
+void AddLED::ReadActionParameters()
+{
+	Output* pOut = pManager->GetOutput();
+	Input* pIn = pManager->GetInput();
+
+	pOut->PrintMsg("LED: Click to add the LED");
+	pIn->GetPointClicked(Cx, Cy);
+	pOut->ClearStatusBar();
+}
+
+void AddLED::Execute()
+{
+	ReadActionParameters();
+	
+	int Len = UI.LED_Width;
+	int Wdth = UI.LED_Height;
+	
+	GraphicsInfo GInfo;
+	
+	GInfo.x1 = Cx - Len/2;
+	GInfo.x2 = Cx + Len/2;
+	GInfo.y1 = Cy - Wdth/2;
+	GInfo.y2 = Cy + Wdth/2;
+	LED *pA=new LED(GInfo); 
+	pManager->AddComponent(pA);
+}
+
+void AddLED::Undo()
+{}
+
+void AddLED::Redo()
+{}
+
+
+================================================================================
+                              END OF FILE
+================================================================================

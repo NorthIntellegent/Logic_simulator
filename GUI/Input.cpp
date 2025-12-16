@@ -81,6 +81,8 @@ ActionType Input::GetUserAction() const {
         return ADD_Switch;
       case ITM_LED:
         return ADD_LED;
+      case ITM_CONNECTION:
+        return ADD_CONNECTION;
 
       case ITM_LABEL:
         return ADD_Label;
