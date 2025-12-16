@@ -82,6 +82,7 @@ enum DsgnMenuItem // The items of the design menu (you should add more items)
   ITM_SAVE,
   ITM_LOAD,
   ITM_SWITCH_SIM, // Switch to Simulation mode button
+  ITM_PLACEHOLDER, // Custom icon (no functionality yet)
 
   ITM_EXIT, // Exit item
 

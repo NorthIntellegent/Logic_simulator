@@ -125,6 +125,7 @@ void Output::CreateDesignToolBar() const {
   MenuItemImages[ITM_SAVE] = "images\\Menu\\ITM_SAVE.jpg";
   MenuItemImages[ITM_LOAD] = "images\\Menu\\ITM_LOAD.jpg";
   MenuItemImages[ITM_SWITCH_SIM] = "images\\Menu\\S.jpg";
+  MenuItemImages[ITM_PLACEHOLDER] = "images\\Menu\\Screenshot 2025-12-17 002933.jpg";
 
   MenuItemImages[ITM_EXIT] = "images\\Menu\\Menu_Exit.jpg";
 
