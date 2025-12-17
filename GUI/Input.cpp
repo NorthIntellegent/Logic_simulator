@@ -90,10 +90,22 @@ ActionType Input::GetUserAction() const {
         return EDIT_Label;
       case ITM_DELETE:
         return DEL;
+      case ITM_MOVE:
+        return MOVE;
+      case ITM_COPY:
+        return COPY;
+      case ITM_CUT:
+        return CUT;
+      case ITM_PASTE:
+        return PASTE;
       case ITM_SAVE:
         return SAVE;
       case ITM_LOAD:
         return LOAD;
+      case ITM_UNDO:
+        return UNDO;
+      case ITM_REDO:
+        return REDO;
       case ITM_SWITCH_SIM:
         return SIM_MODE;
 
@@ -121,13 +133,13 @@ ActionType Input::GetUserAction() const {
 
       switch (ClickedItemOrder) {
       case ITM_SIM:
-        return SIM_MODE;
+        return Simulate; // Run simulation
       case ITM_TRUTH:
         return Create_TruthTable;
       case ITM_CHK:
         return Change_Switch;
       case ITM_CRCK:
-        return Change_Switch; // TODO: Add proper circuit check action
+        return Probe; // Probe component values
       case ITM_BAK:
         return DSN_MODE; // Back to Design Mode
 

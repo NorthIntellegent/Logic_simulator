@@ -1,66 +1,66 @@
 #include "XOR3.h"
 
-XOR3::XOR3(const GraphicsInfo &r_GfxInfo, int r_FanOut):Gate(3, r_FanOut)
-{
-	m_GfxInfo.x1 = r_GfxInfo.x1;
-	m_GfxInfo.y1 = r_GfxInfo.y1;
-	m_GfxInfo.x2 = r_GfxInfo.x2;
-	m_GfxInfo.y2 = r_GfxInfo.y2;
+XOR3::XOR3(const GraphicsInfo &r_GfxInfo, int r_FanOut) : Gate(3, r_FanOut) {
+  m_GfxInfo.x1 = r_GfxInfo.x1;
+  m_GfxInfo.y1 = r_GfxInfo.y1;
+  m_GfxInfo.x2 = r_GfxInfo.x2;
+  m_GfxInfo.y2 = r_GfxInfo.y2;
 }
 
+void XOR3::Operate() {
+  // Calculate the output status as the XORing of the three input pins
+  STATUS in1 = m_InputPins[0].getStatus();
+  STATUS in2 = m_InputPins[1].getStatus();
+  STATUS in3 = m_InputPins[2].getStatus();
 
-void XOR3::Operate()
-{
-	//caclulate the output status as the XORing of the three input pins
-
-	//Add you code here
+  // XOR: output is HIGH if odd number of inputs are HIGH
+  int count =
+      (in1 == HIGH ? 1 : 0) + (in2 == HIGH ? 1 : 0) + (in3 == HIGH ? 1 : 0);
+  if (count % 2 == 1)
+    m_OutputPin.setStatus(HIGH);
+  else
+    m_OutputPin.setStatus(LOW);
 }
-
 
 // Function Draw
 // Draws 3-input XOR gate
-void XOR3::Draw(Output* pOut)
-{
-	//Call output class and pass gate drawing info to it.
-	pOut->DrawXOR3(m_GfxInfo, IsSelected(), GetLabel());
+void XOR3::Draw(Output *pOut) {
+  // Call output class and pass gate drawing info to it.
+  pOut->DrawXOR3(m_GfxInfo, IsSelected(), GetLabel());
 }
 
-//returns status of outputpin
-int XOR3::GetOutPinStatus()	
-{
-	return m_OutputPin.getStatus();
+// returns status of outputpin
+int XOR3::GetOutPinStatus() { return m_OutputPin.getStatus(); }
+
+// returns status of Inputpin #n
+int XOR3::GetInputPinStatus(int n) {
+  return m_InputPins[n - 1]
+      .getStatus(); // n starts from 1 but array index starts from 0.
 }
 
-
-//returns status of Inputpin #n
-int XOR3::GetInputPinStatus(int n)	
-{
-	return m_InputPins[n-1].getStatus();	//n starts from 1 but array index starts from 0.
+// Set status of an input pin ot HIGH or LOW
+void XOR3::setInputPinStatus(int n, STATUS s) {
+  m_InputPins[n - 1].setStatus(s);
 }
 
-//Set status of an input pin ot HIGH or LOW
-void XOR3::setInputPinStatus(int n, STATUS s)
-{
-	m_InputPins[n-1].setStatus(s);
+void XOR3::Save(ofstream &fout) {
+  string label = GetLabel();
+  if (label == "")
+    label = "$";
+  fout << "XOR3 " << GetID() << " " << label << " " << m_GfxInfo.x1 << " "
+       << m_GfxInfo.y1 << endl;
 }
 
-void XOR3::Save(ofstream &fout)
-{
-	string label = GetLabel();
-	if (label == "") label = "$";
-	fout << "XOR3 " << GetID() << " " << label << " " << m_GfxInfo.x1 << " " << m_GfxInfo.y1 << endl;
-}
-
-void XOR3::Load(ifstream &fin)
-{
-	string label;
-	int id, x, y;
-	fin >> id >> label >> x >> y;
-	SetID(id);
-	if (label == "$") label = "";
-	SetLabel(label);
-	m_GfxInfo.x1 = x;
-	m_GfxInfo.y1 = y;
-	m_GfxInfo.x2 = x + UI.XOR3_Width;
-	m_GfxInfo.y2 = y + UI.XOR3_Height;
+void XOR3::Load(ifstream &fin) {
+  string label;
+  int id, x, y;
+  fin >> id >> label >> x >> y;
+  SetID(id);
+  if (label == "$")
+    label = "";
+  SetLabel(label);
+  m_GfxInfo.x1 = x;
+  m_GfxInfo.y1 = y;
+  m_GfxInfo.x2 = x + UI.XOR3_Width;
+  m_GfxInfo.y2 = y + UI.XOR3_Height;
 }

@@ -132,11 +132,8 @@ void AddConnection::Execute() {
   }
 
   // Check if source output pin already has a connection
-  if (pSrcPin->getConnectionCount() > 0) {
-    pManager->GetOutput()->PrintMsg(
-        "Error: Source component is already connected to another component!");
-    return;
-  }
+  // (Removed restriction to allow fan-out: one output can connect to multiple
+  // inputs)
 
   // Create GraphicsInfo for the connection
   // Use actual component positions from GetGraphicsInfo()

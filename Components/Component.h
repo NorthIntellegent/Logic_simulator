@@ -57,6 +57,10 @@ public:
     return m_GfxInfo;
   } // Returns component's graphics info
 
+  void SetGraphicsInfo(const GraphicsInfo &gfx) {
+    m_GfxInfo = gfx;
+  } // Sets component's graphics info
+
   Component();
 
   // Destructor must be virtual

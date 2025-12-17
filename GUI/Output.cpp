@@ -125,7 +125,13 @@ void Output::CreateDesignToolBar() const {
   MenuItemImages[ITM_SAVE] = "images\\Menu\\ITM_SAVE.jpg";
   MenuItemImages[ITM_LOAD] = "images\\Menu\\ITM_LOAD.jpg";
   MenuItemImages[ITM_SWITCH_SIM] = "images\\Menu\\S.jpg";
-  MenuItemImages[ITM_PLACEHOLDER] = "images\\Menu\\Screenshot 2025-12-17 002933.jpg";
+  // New items added after original buttons
+  MenuItemImages[ITM_MOVE] = "move.jpg";
+  MenuItemImages[ITM_COPY] = "copy.jpeg";
+  MenuItemImages[ITM_CUT] = "cut.jpeg";
+  MenuItemImages[ITM_PASTE] = "paste.jpg";
+  MenuItemImages[ITM_UNDO] = "undo.jpg";
+  MenuItemImages[ITM_REDO] = "redo.jpg";
 
   MenuItemImages[ITM_EXIT] = "images\\Menu\\Menu_Exit.jpg";
 
@@ -445,8 +451,8 @@ void Output::DrawXOR3(GraphicsInfo r_GfxInfo, bool selected,
   }
 }
 
-void Output::DrawSWITCH(GraphicsInfo r_GfxInfo, bool selected,
-                        string label) const {
+void Output::DrawSWITCH(GraphicsInfo r_GfxInfo, bool selected, string label,
+                        bool isOn) const {
   string GateImage;
   if (selected)
     GateImage = "Images\\Gates\\SWT_hi.jpg";
@@ -455,6 +461,15 @@ void Output::DrawSWITCH(GraphicsInfo r_GfxInfo, bool selected,
 
   pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.AND2_Width,
                    UI.AND2_Height);
+
+  // If switch is ON, draw an indicator
+  if (isOn) {
+    pWind->SetPen(GREEN, 2);
+    pWind->SetBrush(GREEN);
+    int centerX = r_GfxInfo.x1 + UI.AND2_Width / 2;
+    int centerY = r_GfxInfo.y1 + UI.AND2_Height / 2;
+    pWind->DrawCircle(centerX, centerY, 10, FILLED);
+  }
 
   // Draw label below the gate if it exists
   if (label != "") {
@@ -468,8 +483,8 @@ void Output::DrawSWITCH(GraphicsInfo r_GfxInfo, bool selected,
   }
 }
 
-void Output::DrawLED(GraphicsInfo r_GfxInfo, bool selected,
-                     string label) const {
+void Output::DrawLED(GraphicsInfo r_GfxInfo, bool selected, string label,
+                     bool isOn) const {
   string GateImage;
   if (selected)
     GateImage = "Images\\Gates\\BLB_hi.jpg";
@@ -478,6 +493,15 @@ void Output::DrawLED(GraphicsInfo r_GfxInfo, bool selected,
 
   pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.AND2_Width,
                    UI.AND2_Height);
+
+  // If LED is ON, draw a colored circle overlay to indicate it's lit
+  if (isOn) {
+    pWind->SetPen(RED, 2);
+    pWind->SetBrush(RED);
+    int centerX = r_GfxInfo.x1 + UI.AND2_Width / 2;
+    int centerY = r_GfxInfo.y1 + UI.AND2_Height / 2;
+    pWind->DrawCircle(centerX, centerY, 15, FILLED);
+  }
 
   // Draw label below the gate if it exists
   if (label != "") {

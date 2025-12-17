@@ -25,12 +25,17 @@ enum ActionType {
   EDIT_Label, // Edit Label of a Component, a Connection
 
   Create_TruthTable, // Create Truth Table of the Circuit
+  Simulate,          // Run circuit simulation
+  Probe,             // Probe circuit component values
 
   Change_Switch, // Change Switch Status in Simulation Mode
 
   SELECT, // Select a Component, a Connection
   DEL,    // Delete a Component, a Connection
   MOVE,   // Move a Component, a Connection
+  COPY,   // Copy a Component
+  CUT,    // Cut a Component
+  PASTE,  // Paste a Component
 
   SAVE, // Save the whole Circuit to a file
   LOAD, // Load a Circuit from a file
@@ -82,7 +87,14 @@ enum DsgnMenuItem // The items of the design menu (you should add more items)
   ITM_SAVE,
   ITM_LOAD,
   ITM_SWITCH_SIM, // Switch to Simulation mode button
-  ITM_PLACEHOLDER, // Custom icon (no functionality yet)
+
+  // === NEW ITEMS ADDED BELOW ===
+  ITM_MOVE,  // Move component
+  ITM_COPY,  // Copy component
+  ITM_CUT,   // Cut component
+  ITM_PASTE, // Paste component
+  ITM_UNDO,  // Undo last action
+  ITM_REDO,  // Redo last undone action
 
   ITM_EXIT, // Exit item
 

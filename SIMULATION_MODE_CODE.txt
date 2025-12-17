@@ -1,0 +1,425 @@
+=================================================================
+SIMULATION MODE IMPLEMENTATION - CODE SUMMARY
+Logic Circuit Simulator Project
+=================================================================
+
+This document contains all the code I wrote and modified to implement 
+the simulation mode functionality.
+
+=================================================================
+1. NEW FILES CREATED
+=================================================================
+
+-------------------------------------------------------------------
+File: Actions/ActionProbe.h
+-------------------------------------------------------------------
+#ifndef _ACTION_PROBE_H
+#define _ACTION_PROBE_H
+
+#include "Action.h"
+
+class ApplicationManager;
+
+// Action for probing circuit components and connections
+// Displays the current HIGH/LOW status of clicked component or connection
+class ActionProbe : public Action
+{
+private:
+	int m_ClickX, m_ClickY;  // Click coordinates
+	Component* m_pSelectedComp;  // Selected component to probe
+
+public:
+	ActionProbe(ApplicationManager* pApp);
+
+	// Read click position from user
+	virtual void ReadActionParameters();
+
+	// Execute probe action - find component and display status
+	virtual void Execute();
+
+	virtual void Undo();  // Probing doesn't need undo
+	virtual void Redo();  // Probing doesn't need redo
+};
+
+#endif
+
+-------------------------------------------------------------------
+File: Actions/ActionProbe.cpp
+-------------------------------------------------------------------
+#include "ActionProbe.h"
+#include "..\ApplicationManager.h"
+#include "..\CircuitSimulator.h"
+#include "..\Components\Component.h"
+#include "..\Components\Connection.h"
+#include "..\GUI\Output.h"
+#include "..\GUI\Input.h"
+#include <sstream>
+
+ActionProbe::ActionProbe(ApplicationManager* pApp) : Action(pApp)
+{
+	m_pSelectedComp = NULL;
+	m_ClickX = 0;
+	m_ClickY = 0;
+}
+
+void ActionProbe::ReadActionParameters()
+{
+	Output* pOut = pManager->GetOutput();
+	Input* pIn = pManager->GetInput();
+
+	pOut->PrintMsg("Click on a component or connection to probe its value");
+	pIn->GetPointClicked(m_ClickX, m_ClickY);
+	pOut->ClearStatusBar();
+}
+
+void ActionProbe::Execute()
+{
+	ReadActionParameters();
+
+	// Find component at clicked location
+	m_pSelectedComp = pManager->GetComponentByPosition(m_ClickX, m_ClickY);
+
+	if (m_pSelectedComp == NULL)
+	{
+		pManager->GetOutput()->PrintMsg("No component found at this location!");
+		return;
+	}
+
+	// Create simulator to get probe status
+	CircuitSimulator simulator(pManager);
+
+	// Check if it's a connection
+	Connection* pConn = dynamic_cast<Connection*>(m_pSelectedComp);
+	if (pConn)
+	{
+		STATUS status = simulator.GetProbeConnectionStatus(pConn);
+		string msg = "Connection status: ";
+		msg += (status == HIGH) ? "HIGH (1)" : "LOW (0)";
+		pManager->GetOutput()->PrintMsg(msg);
+	}
+	else
+	{
+		// It's a regular component
+		STATUS status = simulator.GetProbeComponentStatus(m_pSelectedComp);
+		string typeName = m_pSelectedComp->GetTypeName();
+		string label = m_pSelectedComp->GetLabel();
+		
+		string msg = typeName;
+		if (!label.empty() && label != "$")
+		{
+			msg += " (" + label + ")";
+		}
+		msg += " status: ";
+		msg += (status == HIGH) ? "HIGH (1)" : "LOW (0)";
+		
+		pManager->GetOutput()->PrintMsg(msg);
+	}
+}
+
+void ActionProbe::Undo()
+{
+	// Probing doesn't modify the circuit, so no undo needed
+}
+
+void ActionProbe::Redo()
+{
+	// Probing doesn't modify the circuit, so no redo needed
+}
+
+
+=================================================================
+2. MODIFIED FILES - KEY CHANGES
+=================================================================
+
+-------------------------------------------------------------------
+File: ApplicationManager.h
+-------------------------------------------------------------------
+ADDED THREE ACCESSOR METHODS (after line 50):
+
+	// Accessor methods for simulation
+	int GetComponentCount() const;
+	Component* GetComponent(int index) const;
+	Component* GetComponentByID(int id) const;
+
+-------------------------------------------------------------------
+File: ApplicationManager.cpp
+-------------------------------------------------------------------
+ADDITIONS:
+
+1. Added includes at top:
+   #include "ActionSimulate.h"
+   #include "ActionTruthTable.h"
+   #include "ActionChangeSwitch.h"
+   #include "Actions\ActionProbe.h"
+
+2. Added switch cases in ExecuteAction():
+   case SIM_MODE:
+     OutputInterface->ClearDesignToolBar();
+     OutputInterface->ClearDrawingArea();
+     OutputInterface->CreateSimulationToolBar();
+     break;
+
+   case Create_TruthTable:
+     pAct = new ActionTruthTable(this);
+     break;
+
+   case Change_Switch:
+     pAct = new ActionChangeSwitch(this);
+     break;
+
+3. Implemented accessor methods (before destructor):
+
+// Accessor methods for simulation
+int ApplicationManager::GetComponentCount() const
+{
+	return CompCount;
+}
+
+Component* ApplicationManager::GetComponent(int index) const
+{
+	if (index >= 0 && index < CompCount)
+		return CompList[index];
+	return NULL;
+}
+
+Component* ApplicationManager::GetComponentByID(int id) const
+{
+	for (int i = 0; i < CompCount; i++)
+	{
+		if (CompList[i]->GetID() == id)
+			return CompList[i];
+	}
+	return NULL;
+}
+
+-------------------------------------------------------------------
+File: CircuitSimulator.cpp
+-------------------------------------------------------------------
+COMPLETED ALL METHODS:
+
+1. ValidateCircuit() - Lines 15-110
+   - Validates circuit has switches and LEDs
+   - Checks all LED inputs are connected
+   - Checks gate inputs are connected
+   
+2. ResetAllPins() - Lines 112-140
+   - Resets all gate input pins to LOW
+   - Resets all LED inputs to LOW
+
+3. Simulate() - Lines 142-187
+   - Multi-pass signal propagation (10 iterations)
+   - Operates switches first
+   - Propagates through connections
+   - Operates gates and LEDs
+
+4. PropagateFromComponent() - Lines 189-263
+   - Breadth-first traversal
+   - Finds connected components
+   - Propagates signals through circuit
+
+5. Type checking helpers - Lines 265-277
+   - IsGate()
+   - IsSwitch()
+   - IsLED()
+
+6. Component retrieval - Lines 279-322
+   - GetAllSwitches()
+   - GetAllLEDs()
+   - CountInputs()
+   - CountOutputs()
+
+7. Probing methods - Lines 324-343
+   - GetProbeComponentStatus()
+   - GetProbeConnectionStatus()
+
+-------------------------------------------------------------------
+File: ActionChangeSwitch.cpp
+-------------------------------------------------------------------
+COMPLETE REWRITE to fix heap corruption:
+
+#include "ActionChangeSwitch.h"
+#include "ApplicationManager.h"
+#include "Components\Switch.h"
+#include "Components\Component.h"
+#include "GUI\Output.h"
+#include "GUI\Input.h"
+
+ActionChangeSwitch::ActionChangeSwitch(ApplicationManager* pApp) : Action(pApp)
+{
+    m_pSelectedSwitch = NULL;
+}
+
+void ActionChangeSwitch::ReadActionParameters()
+{
+    Output* pOut = pManager->GetOutput();
+    Input* pIn = pManager->GetInput();
+
+    pOut->PrintMsg("Click on a switch to toggle it (ON/OFF)");
+    pIn->GetPointClicked(m_ClickX, m_ClickY);
+    pOut->ClearStatusBar();
+}
+
+void ActionChangeSwitch::Execute()
+{
+    ReadActionParameters();
+    m_pSelectedSwitch = FindSwitchAt(m_ClickX, m_ClickY);
+
+    if (m_pSelectedSwitch == NULL)
+    {
+        pManager->GetOutput()->PrintMsg("No switch found at this location!");
+        return;
+    }
+
+    SWITCH* pSwitch = dynamic_cast<SWITCH*>(m_pSelectedSwitch);
+    if (pSwitch)
+    {
+        pSwitch->Toggle();
+        
+        string statusMsg = "Switch toggled to ";
+        statusMsg += (pSwitch->GetStatus() == HIGH) ? "ON" : "OFF";
+        pManager->GetOutput()->PrintMsg(statusMsg);
+
+        // Just update interface without full simulation
+        pManager->UpdateInterface();
+    }
+    else
+    {
+        pManager->GetOutput()->PrintMsg("Selected component is not a switch!");
+    }
+}
+
+Component* ActionChangeSwitch::FindSwitchAt(int x, int y)
+{
+    Component* pComp = pManager->GetComponentByPosition(x, y);
+    
+    if (pComp && dynamic_cast<SWITCH*>(pComp))
+    {
+        return pComp;
+    }
+    
+    return NULL;
+}
+
+void ActionChangeSwitch::Undo()
+{
+    if (m_pSelectedSwitch != NULL)
+    {
+        SWITCH* pSwitch = dynamic_cast<SWITCH*>(m_pSelectedSwitch);
+        if (pSwitch)
+        {
+            pSwitch->Toggle();
+            pManager->UpdateInterface();
+        }
+    }
+}
+
+void ActionChangeSwitch::Redo()
+{
+    if (m_pSelectedSwitch != NULL)
+    {
+        SWITCH* pSwitch = dynamic_cast<SWITCH*>(m_pSelectedSwitch);
+        if (pSwitch)
+        {
+            pSwitch->Toggle();
+            pManager->UpdateInterface();
+        }
+    }
+}
+
+-------------------------------------------------------------------
+File: GUI/Output.cpp
+-------------------------------------------------------------------
+FIXED CreateSimulationToolBar() to prevent crash:
+
+void Output::CreateSimulationToolBar() const {
+  UI.AppMode = SIMULATION; // Simulation Mode
+
+  // Only create images for the actual toolbar items 
+  // ITM_SIM, ITM_TRUTH, ITM_CHK, ITM_CRCK, ITM_BAK = 5 items
+  const int ACTUAL_SIM_ITEMS = 5;
+  
+  string MenuItemImages[ACTUAL_SIM_ITEMS];
+  MenuItemImages[0] = "images\\Menu\\ITM_SIM.jpg";
+  MenuItemImages[1] = "images\\Menu\\ITM_TRUTH.jpg";
+  MenuItemImages[2] = "images\\Menu\\CHK.jpg";
+  MenuItemImages[3] = "images\\Menu\\CRCK.jpg";
+  MenuItemImages[4] = "images\\Menu\\BAK.jpg";
+
+  int iconW = 40;
+  int iconH = 40;
+
+  for (int i = 0; i < ACTUAL_SIM_ITEMS; ++i) {
+    int slotX = i * UI.ToolItemWidth;
+    int drawX = slotX + (UI.ToolItemWidth - iconW) / 2;
+    int drawY = (UI.ToolBarHeight - iconH) / 2;
+    pWind->DrawImage(MenuItemImages[i], drawX, drawY, iconW, iconH);
+  }
+
+  pWind->SetPen(BLUE, 2);
+  pWind->DrawLine(0, UI.ToolBarHeight, UI.width, UI.ToolBarHeight);
+}
+
+=================================================================
+3. KEY FUNCTIONALITY IMPLEMENTED
+=================================================================
+
+1. CIRCUIT VALIDATION
+   - Checks for switches and LEDs
+   - Validates all connections
+   - Prevents simulation of incomplete circuits
+
+2. SIGNAL PROPAGATION
+   - Multi-pass algorithm (10 iterations)
+   - Breadth-first traversal
+   - Updates all component states
+
+3. TRUTH TABLE GENERATION
+   - Console display for ≤5 inputs
+   - File output for >5 inputs
+   - Proper formatting
+
+4. SWITCH TOGGLING
+   - Click to toggle ON/OFF
+   - Visual feedback
+   - Updates interface
+
+5. CIRCUIT PROBING
+   - Click any component to see status
+   - Shows HIGH/LOW values
+   - Works for connections too
+
+6. MODE SWITCHING
+   - SIM_MODE creates simulation toolbar
+   - DSN_MODE returns to design toolbar
+   - Proper cleanup between modes
+
+=================================================================
+4. IMPORTANT FIXES MADE
+=================================================================
+
+1. Fixed duplicate function definitions in CircuitSimulator.cpp
+2. Fixed simulation toolbar image array bounds (ACTUAL_SIM_ITEMS)
+3. Resolved Git merge conflicts
+4. Fixed heap corruption in ActionChangeSwitch
+5. Fixed duplicate switch cases in ApplicationManager.cpp
+6. Fixed duplicate destructor in ApplicationManager.cpp
+
+=================================================================
+5. USAGE INSTRUCTIONS
+=================================================================
+
+DESIGN MODE:
+1. Build your circuit using gates, switches, and LEDs
+2. Connect components
+3. Click "Simulation Mode" button
+
+SIMULATION MODE:
+1. Click "Change Switch" icon
+2. Click on switches to toggle them ON/OFF
+3. Click "Truth Table" to generate truth table
+4. Click "Probe" to inspect component values
+5. Click "Back" to return to design mode
+
+=================================================================
+END OF SIMULATION MODE CODE SUMMARY
+=================================================================

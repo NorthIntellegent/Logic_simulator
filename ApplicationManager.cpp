@@ -1,4 +1,13 @@
 #include "ApplicationManager.h"
+#include "Actions\ActionChangeSwitch.h"
+#include "Actions\ActionCopy.h"
+#include "Actions\ActionCut.h"
+#include "Actions\ActionExit.h"
+#include "Actions\ActionMove.h"
+#include "Actions\ActionPaste.h"
+#include "Actions\ActionProbe.h"
+#include "Actions\ActionSimulate.h"
+#include "Actions\ActionTruthTable.h"
 #include "Actions\AddANDgate2.h"
 #include "Actions\AddANDgate3.h"
 #include "Actions\AddBuffer.h"
@@ -37,14 +46,22 @@
 #include <fstream>
 #include <iostream>
 
-
 using namespace std;
 
 ApplicationManager::ApplicationManager() {
   CompCount = 0;
+  UndoCount = 0;
+  RedoCount = 0;
+  m_Clipboard.hasData = false;
+  m_Clipboard.typeName = "";
 
   for (int i = 0; i < MaxCompCount; i++)
     CompList[i] = NULL;
+
+  for (int i = 0; i < MaxActionHistory; i++) {
+    UndoStack[i] = NULL;
+    RedoStack[i] = NULL;
+  }
 
   // Creates the Input / Output Objects & Initialize the GUI
   OutputInterface = new Output();
@@ -162,13 +179,66 @@ void ApplicationManager::ExecuteAction(ActionType ActType) {
     UpdateInterface(); // Redraw all components
     break;
 
+  case Change_Switch:
+    pAct = new ActionChangeSwitch(this);
+    break;
+
+  case Simulate:
+    pAct = new ActionSimulate(this);
+    break;
+
+  case Create_TruthTable:
+    pAct = new ActionTruthTable(this);
+    break;
+
+  case Probe:
+    pAct = new ActionProbe(this);
+    break;
+
+  case MOVE:
+    pAct = new ActionMove(this);
+    break;
+
+  case COPY:
+    pAct = new ActionCopy(this);
+    break;
+
+  case CUT:
+    pAct = new ActionCut(this);
+    break;
+
+  case PASTE:
+    pAct = new ActionPaste(this);
+    break;
+
   case EXIT:
-    /// TODO: create ExitAction here
+    pAct = new ActionExit(this);
+    break;
+
+  case UNDO:
+    PerformUndo();
+    break;
+
+  case REDO:
+    PerformRedo();
+    break;
+
+  case STATUS_BAR:
+  case DSN_TOOL:
+    // Clicks on empty areas - ignore
     break;
   }
   if (pAct) {
     pAct->Execute();
-    delete pAct;
+
+    // For undoable actions (Move, Select), save to undo stack
+    // For others, delete immediately
+    ActionType actType = ActType;
+    if (actType == MOVE || actType == SELECT) {
+      AddToUndoStack(pAct);
+    } else {
+      delete pAct;
+    }
     pAct = NULL;
   }
 }
@@ -370,4 +440,132 @@ ApplicationManager::~ApplicationManager() {
     delete CompList[i];
   delete OutputInterface;
   delete InputInterface;
+}
+
+// Accessor methods for simulation
+int ApplicationManager::GetComponentCount() const { return CompCount; }
+
+Component *ApplicationManager::GetComponent(int index) const {
+  if (index >= 0 && index < CompCount)
+    return CompList[index];
+  return NULL;
+}
+
+Component *ApplicationManager::GetComponentByID(int id) const {
+  for (int i = 0; i < CompCount; i++) {
+    if (CompList[i]->GetID() == id)
+      return CompList[i];
+  }
+  return NULL;
+}
+
+// Multi-selection helpers
+int ApplicationManager::GetSelectedCount() const {
+  int count = 0;
+  for (int i = 0; i < CompCount; i++) {
+    if (CompList[i] && CompList[i]->IsSelected())
+      count++;
+  }
+  return count;
+}
+
+void ApplicationManager::ClearAllSelections() {
+  for (int i = 0; i < CompCount; i++) {
+    if (CompList[i])
+      CompList[i]->SetSelected(false);
+  }
+}
+
+void ApplicationManager::DeleteAllSelected() {
+  // Delete from end to avoid index shifting issues
+  for (int i = CompCount - 1; i >= 0; i--) {
+    if (CompList[i] && CompList[i]->IsSelected()) {
+      DeleteComponent(CompList[i]);
+    }
+  }
+}
+
+void ApplicationManager::MoveAllSelected(int dx, int dy) {
+  for (int i = 0; i < CompCount; i++) {
+    if (CompList[i] && CompList[i]->IsSelected()) {
+      GraphicsInfo gfx = CompList[i]->GetGraphicsInfo();
+      gfx.x1 += dx;
+      gfx.y1 += dy;
+      gfx.x2 += dx;
+      gfx.y2 += dy;
+      CompList[i]->SetGraphicsInfo(gfx);
+    }
+  }
+}
+
+// Undo/Redo System Implementation
+void ApplicationManager::AddToUndoStack(Action *pAction) {
+  if (UndoCount >= MaxActionHistory) {
+    // Stack full, remove oldest action
+    delete UndoStack[0];
+    for (int i = 0; i < MaxActionHistory - 1; i++) {
+      UndoStack[i] = UndoStack[i + 1];
+    }
+    UndoCount--;
+  }
+  UndoStack[UndoCount++] = pAction;
+
+  // Clear redo stack when new action is performed
+  ClearRedoStack();
+}
+
+void ApplicationManager::PerformUndo() {
+  if (UndoCount <= 0) {
+    OutputInterface->PrintMsg("Nothing to undo!");
+    return;
+  }
+
+  // Get last action and undo it
+  Action *pAction = UndoStack[--UndoCount];
+  UndoStack[UndoCount] = NULL;
+
+  pAction->Undo();
+
+  // Add to redo stack
+  if (RedoCount < MaxActionHistory) {
+    RedoStack[RedoCount++] = pAction;
+  } else {
+    delete pAction;
+  }
+
+  UpdateInterface();
+  OutputInterface->PrintMsg("Undo performed");
+}
+
+void ApplicationManager::PerformRedo() {
+  if (RedoCount <= 0) {
+    OutputInterface->PrintMsg("Nothing to redo!");
+    return;
+  }
+
+  // Get last undone action and redo it
+  Action *pAction = RedoStack[--RedoCount];
+  RedoStack[RedoCount] = NULL;
+
+  pAction->Redo();
+
+  // Add back to undo stack
+  if (UndoCount < MaxActionHistory) {
+    UndoStack[UndoCount++] = pAction;
+  } else {
+    delete pAction;
+  }
+
+  UpdateInterface();
+  OutputInterface->PrintMsg("Redo performed");
+}
+
+void ApplicationManager::ClearRedoStack() {
+  for (int i = 0; i < RedoCount; i++) {
+    if (RedoStack[i]) {
+      delete RedoStack[i];
+      RedoStack[i] = NULL;
+    }
+  }
+  RedoCount = 0;
 }

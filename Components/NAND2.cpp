@@ -1,66 +1,63 @@
 #include "NAND2.h"
 
-NAND2::NAND2(const GraphicsInfo &r_GfxInfo, int r_FanOut):Gate(2, r_FanOut)
-{
-	m_GfxInfo.x1 = r_GfxInfo.x1;
-	m_GfxInfo.y1 = r_GfxInfo.y1;
-	m_GfxInfo.x2 = r_GfxInfo.x2;
-	m_GfxInfo.y2 = r_GfxInfo.y2;
+NAND2::NAND2(const GraphicsInfo &r_GfxInfo, int r_FanOut) : Gate(2, r_FanOut) {
+  m_GfxInfo.x1 = r_GfxInfo.x1;
+  m_GfxInfo.y1 = r_GfxInfo.y1;
+  m_GfxInfo.x2 = r_GfxInfo.x2;
+  m_GfxInfo.y2 = r_GfxInfo.y2;
 }
 
+void NAND2::Operate() {
+  // Calculate the output status as the NANDing of the two input pins
+  STATUS in1 = m_InputPins[0].getStatus();
+  STATUS in2 = m_InputPins[1].getStatus();
 
-void NAND2::Operate()
-{
-	//caclulate the output status as the NANDing of the two input pins
-
-	//Add you code here
+  // NAND: output is LOW only if both inputs are HIGH
+  if (in1 == HIGH && in2 == HIGH)
+    m_OutputPin.setStatus(LOW);
+  else
+    m_OutputPin.setStatus(HIGH);
 }
-
 
 // Function Draw
 // Draws 2-input NAND gate
-void NAND2::Draw(Output* pOut)
-{
-	//Call output class and pass gate drawing info to it.
-	pOut->DrawNAND2(m_GfxInfo, IsSelected(), GetLabel());
+void NAND2::Draw(Output *pOut) {
+  // Call output class and pass gate drawing info to it.
+  pOut->DrawNAND2(m_GfxInfo, IsSelected(), GetLabel());
 }
 
-//returns status of outputpin
-int NAND2::GetOutPinStatus()	
-{
-	return m_OutputPin.getStatus();
+// returns status of outputpin
+int NAND2::GetOutPinStatus() { return m_OutputPin.getStatus(); }
+
+// returns status of Inputpin #n
+int NAND2::GetInputPinStatus(int n) {
+  return m_InputPins[n - 1]
+      .getStatus(); // n starts from 1 but array index starts from 0.
 }
 
-
-//returns status of Inputpin #n
-int NAND2::GetInputPinStatus(int n)	
-{
-	return m_InputPins[n-1].getStatus();	//n starts from 1 but array index starts from 0.
+// Set status of an input pin ot HIGH or LOW
+void NAND2::setInputPinStatus(int n, STATUS s) {
+  m_InputPins[n - 1].setStatus(s);
 }
 
-//Set status of an input pin ot HIGH or LOW
-void NAND2::setInputPinStatus(int n, STATUS s)
-{
-	m_InputPins[n-1].setStatus(s);
+void NAND2::Save(ofstream &fout) {
+  string label = GetLabel();
+  if (label == "")
+    label = "$";
+  fout << "NAND2 " << GetID() << " " << label << " " << m_GfxInfo.x1 << " "
+       << m_GfxInfo.y1 << endl;
 }
 
-void NAND2::Save(ofstream &fout)
-{
-	string label = GetLabel();
-	if (label == "") label = "$";
-	fout << "NAND2 " << GetID() << " " << label << " " << m_GfxInfo.x1 << " " << m_GfxInfo.y1 << endl;
-}
-
-void NAND2::Load(ifstream &fin)
-{
-	string label;
-	int id, x, y;
-	fin >> id >> label >> x >> y;
-	SetID(id);
-	if (label == "$") label = "";
-	SetLabel(label);
-	m_GfxInfo.x1 = x;
-	m_GfxInfo.y1 = y;
-	m_GfxInfo.x2 = x + UI.NAND2_Width;
-	m_GfxInfo.y2 = y + UI.NAND2_Height;
+void NAND2::Load(ifstream &fin) {
+  string label;
+  int id, x, y;
+  fin >> id >> label >> x >> y;
+  SetID(id);
+  if (label == "$")
+    label = "";
+  SetLabel(label);
+  m_GfxInfo.x1 = x;
+  m_GfxInfo.y1 = y;
+  m_GfxInfo.x2 = x + UI.NAND2_Width;
+  m_GfxInfo.y2 = y + UI.NAND2_Height;
 }
